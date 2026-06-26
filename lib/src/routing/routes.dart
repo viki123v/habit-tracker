@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:habit_tracker/ui/page_not_found/page_not_found_view.dart';
-import 'package:habit_tracker/ui/screens/habit/creation/habit_creation.dart';
-import 'package:habit_tracker/ui/screens/habit/details/habit_details.dart';
-import 'package:habit_tracker/ui/screens/home/home_view.dart';
-import 'package:habit_tracker/ui/screens/login/login_view.dart';
-import 'package:habit_tracker/ui/screens/marketplace/marketplace_view.dart';
-import 'package:habit_tracker/ui/screens/profile/prifle_view.dart';
-import 'package:habit_tracker/ui/screens/report/report_view.dart';
+import 'package:habit_tracker/src/ui/page_not_found/page_not_found_view.dart';
+import 'package:habit_tracker/src/ui/screens/habit/creation/habit_creation.dart';
+import 'package:habit_tracker/src/ui/screens/habit/details/habit_details.dart';
+import 'package:habit_tracker/src/ui/screens/home/home_view.dart';
+import 'package:habit_tracker/src/ui/screens/login/login_view.dart';
+import 'package:habit_tracker/src/ui/screens/marketplace/marketplace_view.dart';
+import 'package:habit_tracker/src/ui/screens/profile/prifle_view.dart';
+import 'package:habit_tracker/src/ui/screens/report/report_view.dart';
 
 final router = GoRouter(
   errorBuilder: (context, state) => PageNotFoundView(),
