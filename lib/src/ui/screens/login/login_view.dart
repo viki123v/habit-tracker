@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/src/ui/core/theme/text_levels.dart';
-import 'package:habit_tracker/src/ui/core/theme/theme.dart';
+import 'package:habit_tracker/src/ui/core/theme.dart';
 
-//TODO: import from theme.dart or the export file not the actual file
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
 
