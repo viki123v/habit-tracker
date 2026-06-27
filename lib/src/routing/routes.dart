@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:habit_tracker/src/ui/core/shared/footer/footer_view.dart';
-import 'package:habit_tracker/src/ui/core/shared/naviagtion_bar/navigation_bar_view.dart';
 import 'package:habit_tracker/src/ui/page_not_found/page_not_found_view.dart';
 import 'package:habit_tracker/src/ui/screens/habit/creation/habit_creation.dart';
 import 'package:habit_tracker/src/ui/screens/habit/details/habit_details.dart';
@@ -11,14 +9,15 @@ import 'package:habit_tracker/src/ui/screens/marketplace/marketplace_view.dart';
 import 'package:habit_tracker/src/ui/screens/profile/prifle_view.dart';
 import 'package:habit_tracker/src/ui/screens/report/report_view.dart';
 
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+
 final router = GoRouter(
+  navigatorKey: _rootNavigatorKey,
   errorBuilder: (context, state) => PageNotFoundView(),
   routes: [
     GoRoute(
       path: "/",
-      builder: (context, state) => Scaffold(
-        body: LoginView()
-      ),
+      builder: (context, state) => LoginView(),
       routes: [
         GoRoute(path: "home", builder: (_, _) => HomeView()),
         GoRoute(

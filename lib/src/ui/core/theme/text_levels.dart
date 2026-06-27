@@ -2,20 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/src/ui/core/theme/color_palette.dart';
 import 'package:habit_tracker/src/ui/core/theme/raw.dart';
 
-extension HexColors on Color {
-  static Color fromHex(String hexString) {
-    final buffer = StringBuffer();
-    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-    buffer.write(hexString.replaceFirst('#', ''));
-    return Color(int.parse(buffer.toString(), radix: 16));
-  }
-}
+export 'package:habit_tracker/src/ui/core/theme/hex_colors.dart';
 
 class _TextStyling {
   static final TextStyle title = TextStyle(
     fontFamily: rawProperties.families.primary,
-    fontSize: rawProperties.textSize.size900.toDouble(),
-    letterSpacing: rawProperties.lineSize.size900.toDouble(),
+    fontSize: rawProperties.textSize.size600.toDouble(),
+    letterSpacing: rawProperties.lineSize.size50.toDouble(),
     fontWeight: rawProperties.fontWeight.bold,
   );
   static final TextStyle heading = TextStyle(
@@ -27,13 +20,13 @@ class _TextStyling {
   static final TextStyle subheading = TextStyle(
     fontFamily: rawProperties.families.primary,
     fontSize: rawProperties.textSize.size500.toDouble(),
-    letterSpacing: rawProperties.lineSize.size500.toDouble(),
+    letterSpacing: rawProperties.lineSize.size50.toDouble(),
     fontWeight: rawProperties.fontWeight.none,
   );
   static final TextStyle bodyText = TextStyle(
     fontFamily: rawProperties.families.secondary,
     fontSize: rawProperties.textSize.size400.toDouble(),
-    letterSpacing: rawProperties.lineSize.size400.toDouble(),
+    letterSpacing: rawProperties.lineSize.size50.toDouble(),
     fontWeight: rawProperties.fontWeight.none,
   );
   static final TextStyle link = bodyText.copyWith(
@@ -42,14 +35,14 @@ class _TextStyling {
     fontSize: rawProperties.textSize.size100.toDouble(),
     letterSpacing: rawProperties.lineSize.size100.toDouble(),
     fontWeight: rawProperties.fontWeight.none,
-    color: HexColors.fromHex(ColorPalette.info),
+    color: ColorPalette.info,
   );
   static final TextStyle caption = TextStyle(
     fontFamily: rawProperties.families.secondary,
     fontSize: rawProperties.textSize.size200.toDouble(),
-    letterSpacing: rawProperties.lineSize.size300.toDouble(),
+    letterSpacing: rawProperties.lineSize.size50.toDouble(),
     fontWeight: rawProperties.fontWeight.none,
-    color: HexColors.fromHex(ColorPalette.neutral),
+    color: ColorPalette.neutral,
   );
   static final TextStyle overline = TextStyle(
     fontFamily: rawProperties.families.secondary,

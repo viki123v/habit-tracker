@@ -22,6 +22,7 @@ const rawProperties = RawProperties(
     size900: 64,
   ),
   lineSize: RawLineSizes(
+    size50: 2,
     size100: 14,
     size200: 18,
     size300: 20,
@@ -123,6 +124,7 @@ class RawTextSizes {
 
 class RawLineSizes {
   const RawLineSizes({
+    required this.size50,
     required this.size100,
     required this.size200,
     required this.size300,
@@ -134,6 +136,7 @@ class RawLineSizes {
     required this.size900,
   });
 
+  final int size50;
   final int size100;
   final int size200;
   final int size300;
