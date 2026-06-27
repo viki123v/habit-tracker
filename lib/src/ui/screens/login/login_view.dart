@@ -13,13 +13,16 @@ class LoginView extends StatelessWidget {
         child: Column(
           spacing: 2,
           children: [
-            brandLogo,
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.asset(brandLogo, fit: BoxFit.contain),
+            ),
             Text("Habitly").title(),
             Container(
               margin: const EdgeInsets.only(top: 30),
               child: Column(
                 children: [
-                  Text("Welcome to Habitly").subheading(),
+                  Text("Welcome").subheading(),
                   Padding(
                     padding: EdgeInsetsGeometry.only(
                       left: 20,
@@ -70,7 +73,10 @@ class LoginView extends StatelessWidget {
                             onPressed: () => {},
                             child: SizedBox(
                               width: double.infinity,
-                              child: Center(child: Text("Create account >").bodyText())),
+                              child: Center(
+                                child: Text("Create account >").bodyText(),
+                              ),
+                            ),
                           ),
                         ],
                       ),

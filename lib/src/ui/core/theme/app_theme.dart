@@ -8,7 +8,7 @@ final lightTheme = _buildTheme(Brightness.light);
 final darkTheme = _buildTheme(Brightness.dark);
 final theme = lightTheme;
 const defaultColorMode = ThemeMode.light;
-final brandLogo = Image(image: AssetImage("assets/images/logo.jpg"));
+final brandLogo = "assets/images/logo.png";
 
 @immutable
 class AppShadows extends ThemeExtension<AppShadows> {
