@@ -20,10 +20,11 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: "/",
-      builder: (context, state) => ChangeNotifierProvider(
-        create: (context) => LoginViewModel(context.read()),
-        child: const LoginView(),
-      ),
+      // builder: (context, state) => ChangeNotifierProvider(
+        // create: (context) => LoginViewModel(context.read()),
+        // child: const LoginView(),
+      // ),
+      builder: (_,_) => HabitCreation(),
       routes: [
         GoRoute(path: "home", builder: (_, _) => const _TestSqlite()),
         GoRoute(
