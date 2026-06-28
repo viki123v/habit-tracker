@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:habit_tracker/src/ui/core/theme.dart';
 import 'package:habit_tracker/src/ui/core/theme/border_sizings.dart';
 import 'package:habit_tracker/src/ui/core/theme/text_levels.dart';
@@ -20,7 +21,7 @@ class _HabitCreationState extends State<HabitCreation> {
 
   final _titleController = TextEditingController();
   final _priorityContorller = TextEditingController();
-  final _selected_freq = 1;
+  final _selected_freq = 2;
   final _fire_selected = 0;
 
   @override
@@ -35,114 +36,117 @@ class _HabitCreationState extends State<HabitCreation> {
       ),
       body: Padding(
         padding: EdgeInsetsGeometry.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 20,
-          children: [
-            Text("What's your goal").subheading(),
-            Text("Start small to build lasting consistency.").caption(),
-            TextFormField(
-              controller: _titleController,
-              keyboardType: TextInputType.text,
-              style: TextStylePalette.bodyText,
-              maxLength: 20,
-            ),
-            Text("How often ?").subheading(),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.withAlpha((.1 * 255).round()),
-                  borderRadius: BorderSizings.m,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: ["Daily", "Weekly", "Montly"].asMap().entries.map((
-                    entry,
-                  ) {
-                    final index = entry.key;
-                    final frequency = entry.value;
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 20,
+            children: [
+              Text("What's your goal").subheading(),
+              Text("Start small to build lasting consistency.").caption(),
+              TextFormField(
+                controller: _titleController,
+                keyboardType: TextInputType.text,
+                style: TextStylePalette.bodyText,
+                maxLength: 20,
+              ),
+              Text("How often ?").subheading(),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withAlpha((.1 * 255).round()),
+                    borderRadius: BorderSizings.m,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: ["Daily", "Weekly", "Montly"].asMap().entries.map(
+                      (entry) {
+                        final index = entry.key;
+                        final frequency = entry.value;
 
-                    return Expanded(
-                      child: _selected_freq == index
-                          ? FilledButton(
-                              onPressed: () {},
-                              child: Text(frequency).bodyText(),
-                            )
-                          : OutlinedButton(
-                              onPressed: () {}, //STATE: //DEFEAULT_SELECTION
-                              child: Text(frequency).bodyText(),
-                            ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-            _MontlyInputState(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text("Priority Level").subheading(),
-                Text("Mild".toUpperCase()), //STATE: This should be state
-              ],
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 80,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color.lerp(
-                    ColorPalette.supportColor3,
-                    Colors.white,
-                    .6,
-                  )?.withAlpha((.3 * 255).round()),
-                  borderRadius: BorderSizings.m,
-                  border: BoxBorder.all(
-                    color: ColorPalette.supportColor3.withAlpha(
-                      (0.8 * 255).round(),
-                    ),
-                    width: 1,
-                    style: BorderStyle.solid,
-                  ),
-                ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(5, (i) {
-                        final opacity = _fire_selected == i ? 0.9 : 0.2;
-                        return Icon(
-                          Icons.local_fire_department_outlined,
-                          size: constraints.maxWidth * .2 > 70
-                              ? 40
-                              : constraints.maxWidth * .2,
-                          color: ColorPalette.supportColor3.withAlpha(
-                            (opacity * 255).round(),
-                          ), //STATE:
+                        return Expanded(
+                          child: _selected_freq == index
+                              ? FilledButton(
+                                  onPressed: () {},
+                                  child: Text(frequency).bodyText(),
+                                )
+                              : OutlinedButton(
+                                  onPressed:
+                                      () {}, //STATE: //DEFEAULT_SELECTION
+                                  child: Text(frequency).bodyText(),
+                                ),
                         );
-                      }),
-                    );
-                  },
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.only(top: 20),
-              child: FilledButton(
-                onPressed: () {},
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Container(
-                    color: ColorPalette.primary, // STATE:
-                    child: Text("Save Habit", textAlign: TextAlign.center),
+                      },
+                    ).toList(),
                   ),
                 ),
               ),
-            ),
-          ],
+              _MontlyInputState(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text("Priority Level").subheading(),
+                  Text("Mild".toUpperCase()), //STATE: This should be state
+                ],
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 80,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color.lerp(
+                      ColorPalette.supportColor3,
+                      Colors.white,
+                      .6,
+                    )?.withAlpha((.3 * 255).round()),
+                    borderRadius: BorderSizings.m,
+                    border: BoxBorder.all(
+                      color: ColorPalette.supportColor3.withAlpha(
+                        (0.8 * 255).round(),
+                      ),
+                      width: 1,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: List.generate(5, (i) {
+                          final opacity = _fire_selected == i ? 0.9 : 0.2;
+                          return Icon(
+                            Icons.local_fire_department_outlined,
+                            size: constraints.maxWidth * .2 > 70
+                                ? 40
+                                : constraints.maxWidth * .2,
+                            color: ColorPalette.supportColor3.withAlpha(
+                              (opacity * 255).round(),
+                            ), //STATE:
+                          );
+                        }),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsetsDirectional.only(top: 20),
+                child: FilledButton(
+                  onPressed: () {},
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Container(
+                      color: ColorPalette.primary, // STATE:
+                      child: Text("Save Habit", textAlign: TextAlign.center),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -298,10 +302,35 @@ class _DayInputState extends State<_DayInput> {
   }
 }
 
-class _MontlyInputState extends StatelessWidget{
+class _MontlyInputState extends StatefulWidget {
+  @override
+  State<_MontlyInputState> createState() => _MontlyInputStateState();
+}
+
+class _MontlyInputStateState extends State<_MontlyInputState> {
+  List<DateTime?> _selectedDates = [];
+
   @override
   Widget build(BuildContext context) {
-    return Text("monthly");
+    return CalendarDatePicker2(
+      config: CalendarDatePicker2Config(
+        calendarType: CalendarDatePicker2Type.multi,
+        firstDayOfWeek: 1,
+        controlsHeight: 0,
+        hideLastMonthIcon: true,
+        hideNextMonthIcon: true,
+        disableModePicker: true,
+        modePickerBuilder:
+            ({required viewMode, required monthDate, isMonthPicker}) =>
+                const SizedBox.shrink(),
+        dayBorderRadius: BorderRadius.circular(8),
+        selectedDayHighlightColor: ColorPalette.primary,
+      ),
+      value: _selectedDates,
+      onValueChanged: (dates) {
+        setState(() => _selectedDates = dates);
+      },
+    );
   }
 }
 
