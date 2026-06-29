@@ -15,7 +15,7 @@ import 'models/habit.dart';
 part "database.g.dart"; // the generated code will be there
 
 @TypeConverters([DateTimeConverter])
-@Database(version: 1, entities: [ActiveUser, Habit, HabitDate])
+@Database(version: 2, entities: [ActiveUser, Habit, HabitDate])
 abstract class AppDatabase extends FloorDatabase {
   ActiveUserDao get activeUserDao;
   HabitDao get habitDao;

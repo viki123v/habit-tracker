@@ -5,30 +5,31 @@ import 'package:habit_tracker/src/ui/screens/login/login_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  LoginView({super.key});
 
   @override
   State<LoginView> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    widget._emailController.dispose();
+    widget._passwordController.dispose();
     super.dispose();
   }
 
   Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!widget._formKey.currentState!.validate()) return;
 
     final didLogin = await context.read<LoginViewModel>().login(
-      email: _emailController.text,
-      password: _passwordController.text,
+      email: widget._emailController.text,
+      password: widget._passwordController.text,
     );
 
     if (didLogin && mounted) context.go('/home');
@@ -81,12 +82,12 @@ class _LoginViewState extends State<LoginView> {
                       bottom: 10,
                     ),
                     child: Form(
-                      key: _formKey,
+                      key: widget._formKey,
                       child: Column(
                         spacing: 18,
                         children: [
                           TextFormField(
-                            controller: _emailController,
+                            controller: widget._emailController,
                             enabled: !viewModel.isLoading,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
@@ -107,7 +108,7 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                           TextFormField(
-                            controller: _passwordController,
+                            controller: widget._passwordController,
                             enabled: !viewModel.isLoading,
                             obscureText: true,
                             textInputAction: TextInputAction.done,

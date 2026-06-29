@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/src/domain/repostiories/habit_repository.dart';
 import 'package:habit_tracker/src/ui/core/shared/full_width_button.dart';
 import 'package:habit_tracker/src/ui/core/theme.dart';
 import 'package:habit_tracker/src/ui/core/theme/text_levels.dart';
-import 'package:habit_tracker/src/ui/screens/habit/creation/freq_selections/monthly.dart';
+import 'package:habit_tracker/src/ui/screens/habit/creation/habit_dto.dart';
 import 'package:habit_tracker/src/ui/screens/habit/creation/priority_level.dart';
 
+import 'frequency_selector.dart';
+
 class HabitCreation extends StatefulWidget {
-  const HabitCreation({super.key});
+  HabitRepository habitRepository;
+
+  HabitCreation({super.key, required this.habitRepository});
 
   @override
   State<StatefulWidget> createState() => _HabitCreationState();
@@ -14,11 +19,14 @@ class HabitCreation extends StatefulWidget {
 
 class _HabitCreationState extends State<HabitCreation> {
   final _titleController = TextEditingController();
-  final _selectedFreq = 2;
+  String _selectedFreq = "Daily";
   static const _frequencyOptions = ["Daily", "Weekly", "Montly"];
+  HabitDto dto = HabitDto();
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('Dates: ${dto.dates?.map((date) => date.toIso8601String()).join(', ')}');
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Create a habit").caption(),
@@ -40,6 +48,9 @@ class _HabitCreationState extends State<HabitCreation> {
                 controller: _titleController,
                 keyboardType: TextInputType.text,
                 style: TextStylePalette.bodyText,
+                onChanged: (value){
+                  dto.name = value;
+                },
                 maxLength: 20,
               ),
               Text("How often ?").subheading(),
@@ -53,28 +64,31 @@ class _HabitCreationState extends State<HabitCreation> {
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: _frequencyOptions.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final frequency = entry.value;
-
-                      return Expanded(
-                        child: _selectedFreq == index
+                    children: _frequencyOptions.map((option)=>
+                      Expanded(
+                        child: _selectedFreq == option
                             ? FilledButton(
                                 onPressed: () {},
-                                child: Text(frequency).bodyText(),
+                                child: Text(option).bodyText(),
                               )
                             : OutlinedButton(
-                                onPressed: () {}, //STATE: //DEFEAULT_SELECTION
-                                child: Text(frequency).bodyText(),
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedFreq = option;
+                                  });
+                                },
+                                child: Text(option).bodyText(),
                               ),
-                      );
-                    }).toList(),
+                      )
+                    ).toList(),
                   ),
                 ),
               ),
-              MontlyWidget(),
-              PriorityLevel(),
-              PrimaryFullWidthButton("Save Habit"),
+              FrequencySelector(selectedFreq: _selectedFreq, dto: dto),
+              PriorityLevel(dto: dto),
+              PrimaryFullWidthButton("Save Habit", onPressed: (){
+                 widget.habitRepository.saveHabitWithDates(dto.toModel());
+              }),
             ],
           ),
         ),

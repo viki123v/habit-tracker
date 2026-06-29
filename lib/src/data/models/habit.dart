@@ -10,4 +10,4 @@ class Habit {
   Habit(this.name, this.type, this.priorityLevel);
 }
 
-enum HabitType { daily, monthly, yearly }
+enum HabitType { daily, weekly, monthly }

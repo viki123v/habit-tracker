@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/src/ui/core/theme.dart';
+import 'package:habit_tracker/src/ui/screens/habit/creation/habit_dto.dart';
 
 class PriorityLevel extends StatefulWidget {
-  const PriorityLevel({super.key});
+  HabitDto _dto;
+  int _fireSelected = 0;
+  static int _maxFireIconsCount = 5;
+
+  PriorityLevel({super.key, required this._dto});
 
   @override
   State<StatefulWidget> createState() => _PriorityLevelState();
 }
 
 class _PriorityLevelState extends State<PriorityLevel> {
-  final _fireSelected = 0;
 
   @override
   Widget build(BuildContext context) {
+    widget._dto.priorityLevel = widget._fireSelected;
+
     return Padding(
       padding: EdgeInsetsGeometry.only(top: Spacings.buttonVertical),
       child: Column(
@@ -50,17 +56,23 @@ class _PriorityLevelState extends State<PriorityLevel> {
                 builder: (context, constraints) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(5, (i) {
-                      final opacity = _fireSelected == i ? 0.9 : 0.2;
-                      return Icon(
+                    children: List.generate(PriorityLevel._maxFireIconsCount, (i) {
+                      final opacity =  widget._fireSelected >= i ? 0.9 : 0.2;
+                      return IconButton(
+                      onPressed: (){
+                        setState(() {
+                          widget._fireSelected = i;
+                        });
+                      },
+                          icon: Icon(
                         Icons.local_fire_department_outlined,
-                        size: constraints.maxWidth * .5 > 100
-                            ? 60
-                            : constraints.maxWidth * .5,
+                        size: constraints.maxWidth * .3 > 40
+                            ? 50
+                            : constraints.maxWidth * .3,
                         color: ColorPalette.supportColor3.withAlpha(
                           (opacity * 255).round(),
                         ), //STATE:
-                      );
+                      ));
                     }),
                   );
                 },
