@@ -9,6 +9,22 @@ const rawProperties = RawProperties(
     size500: 10,
     size600: 16,
   ),
+  spacings: RawSpacings(
+    size0: 0,
+    size50: 2,
+    size100: 4,
+    size200: 8,
+    size300: 10,
+    size400: 12,
+    size500: 14,
+    size600: 16,
+    size700: 18,
+    size800: 20,
+    size900: 24,
+    size1000: 30,
+    size1100: 32,
+    size1200: 40,
+  ),
   families: RawFontFamilies(primary: 'Archivo', secondary: 'Inter'),
   textSize: RawTextSizes(
     size100: 11,
@@ -51,6 +67,7 @@ const rawProperties = RawProperties(
 class RawProperties {
   const RawProperties({
     required this.borders,
+    required this.spacings,
     required this.families,
     required this.textSize,
     required this.lineSize,
@@ -59,6 +76,7 @@ class RawProperties {
   });
 
   final RawBorderSizes borders;
+  final RawSpacings spacings;
   final RawFontFamilies families;
   final RawTextSizes textSize;
   final RawLineSizes lineSize;
@@ -89,6 +107,40 @@ class RawBorderSizes {
   final int size400;
   final int size500;
   final int size600;
+}
+
+class RawSpacings {
+  const RawSpacings({
+    required this.size0,
+    required this.size50,
+    required this.size100,
+    required this.size200,
+    required this.size300,
+    required this.size400,
+    required this.size500,
+    required this.size600,
+    required this.size700,
+    required this.size800,
+    required this.size900,
+    required this.size1000,
+    required this.size1100,
+    required this.size1200,
+  });
+
+  final int size0;
+  final int size50;
+  final int size100;
+  final int size200;
+  final int size300;
+  final int size400;
+  final int size500;
+  final int size600;
+  final int size700;
+  final int size800;
+  final int size900;
+  final int size1000;
+  final int size1100;
+  final int size1200;
 }
 
 class RawFontFamilies {
