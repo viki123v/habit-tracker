@@ -13,5 +13,7 @@ class ActiveUserRepository {
     await _activeUserDao.saveActiveUser(user);
   }
 
+  Future<void> addPoints(int points) => _activeUserDao.addPoints(points);
+
   Future<void> clearActiveUser() => _activeUserDao.clearActiveUser();
 }

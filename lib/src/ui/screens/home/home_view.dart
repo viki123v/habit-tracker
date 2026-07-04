@@ -9,6 +9,7 @@ import 'package:habit_tracker/src/ui/core/theme/spacings.dart';
 import 'package:habit_tracker/src/ui/core/theme/text_levels.dart';
 import 'package:habit_tracker/src/ui/screens/home/create_habit_button.dart';
 import 'package:habit_tracker/src/ui/screens/home/day_widgets.dart';
+import 'package:habit_tracker/src/ui/screens/home/habit_item.dart';
 import 'package:habit_tracker/src/ui/screens/home/home_viewmodel.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -101,8 +102,8 @@ class _HomeViewBodyState extends State<_HomeViewBody> {
                 ],
               ),
               _WeeklyConsistency(
-                weeklyPercent: 0.8,
-                statusPerWeek: [true, false],
+                weeklyPercent: homeViewModel.weeklyCompletionPercent,
+                statusPerWeek: homeViewModel.weeklyCompletionStatuses,
               ),
               Padding(
                 padding: EdgeInsetsGeometry.only(top: 10),
@@ -121,15 +122,15 @@ class _HomeViewBodyState extends State<_HomeViewBody> {
                         right: Spacings.tight,
                       ),
                       child: Text(
-                        "4 left",
+                        "${homeViewModel.habitsLeft} left",
                         style: TextStyle(fontWeight: FontWeight.bold),
-                      ), //STATE
+                      ),
                     ),
                   ],
                 ),
               ),
               Expanded(
-                child: FutureBuilder(
+                child: FutureBuilder<void>(
                   future: homeViewModel.getHabitsForToday(),
                   builder: (ctx, snap) {
                     String? userMessage;
@@ -140,21 +141,28 @@ class _HomeViewBodyState extends State<_HomeViewBody> {
                         'Failed to load today\'s habits: ${snap.error}',
                       );
                       userMessage = 'Could not load habits';
-                    } else if (snap.data == null) {
-                      userMessage = "No data";
-                    } else if (snap.data!.isEmpty) {
+                    } else if (homeViewModel.habits.isEmpty) {
                       userMessage = "No habits for today";
                     }
                     return Padding(
                       padding: EdgeInsetsGeometry.only(top: Spacings.relaxed),
                       child: userMessage != null
                           ? Center(child: Text(userMessage).caption())
-                          : Column(
-                              children: snap.data!.map((habitWithDate) {
-                                return Container(
-                                  child: Text(habitWithDate.habit.name),
+                          : ListView.separated(
+                              itemCount: homeViewModel.habits.length,
+                              separatorBuilder: (_, _) =>
+                                  SizedBox(height: Spacings.comfortable),
+                              itemBuilder: (context, index) {
+                                final habitWithDates =
+                                    homeViewModel.habits[index];
+                                return HabitItem(
+                                  key: ValueKey(habitWithDates.habit.name),
+                                  habitWithDates: habitWithDates,
+                                  onDone: () => homeViewModel.markHabitAsDone(
+                                    habitWithDates,
+                                  ),
                                 );
-                              }).toList(),
+                              },
                             ),
                     );
                   },
@@ -219,7 +227,10 @@ class _WeeklyConsistency extends StatelessWidget {
                           fontSize: rawProperties.textSize.size400.toDouble(),
                         ),
                       ),
-                      Text("You're on fire! ${weeklyPercent * 10}% this week"),
+                      Text(
+                        "You're on fire! "
+                        "${(weeklyPercent * 100).round()}% this week",
+                      ),
                     ],
                   ),
                   Expanded(

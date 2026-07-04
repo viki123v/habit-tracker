@@ -1,3 +1,5 @@
+import 'package:habit_tracker/src/data/models/completed_day.dart';
+import 'package:habit_tracker/src/data/models/habit.dart';
 import 'package:habit_tracker/src/data/models/habit_date.dart';
 import 'package:habit_tracker/src/data/models/habit_with_dates.dart';
 
@@ -36,9 +38,40 @@ class HabitRepository {
           )
           .toList(),
     );
+
+    final affectedDates = habitWithDates.habit.type == HabitType.daily.name
+        ? [_dateOnly(DateTime.now())]
+        : habitWithDates.dates.map(_dateOnly);
+
+    for (final date in affectedDates) {
+      await _habitDao.deleteCompletedDay(date);
+    }
   }
 
   Future<List<HabitWithDates>> getHabitForDate(DateTime date) async {
     return _habitDao.getHabitsForDate(date);
+  }
+
+  Future<bool> isDayCompleted(DateTime date) async {
+    return await _habitDao.getCompletedDay(_dateOnly(date)) != null;
+  }
+
+  Future<void> markDayAsCompleted(DateTime date) {
+    return _habitDao.saveCompletedDay(CompletedDay(_dateOnly(date)));
+  }
+
+  Future<List<DateTime>> getCompletedDaysBetween(
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    final completedDays = await _habitDao.getCompletedDaysBetween(
+      _dateOnly(startDate),
+      _dateOnly(endDate),
+    );
+    return completedDays.map((day) => day.date).toList();
+  }
+
+  DateTime _dateOnly(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
   }
 }
