@@ -23,7 +23,7 @@ final router = GoRouter(
         // child: const LoginView(),
       // ),
       builder: (ctx,state) => ChangeNotifierProvider(
-        create: (context) => HomeViewmodel(),
+        create: (ctx) => HomeViewmodel(ctx.read()),
         child: const HomeView(),
       ),
       routes: [

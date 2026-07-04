@@ -37,4 +37,8 @@ class HabitRepository {
           .toList(),
     );
   }
+
+  Future<List<HabitWithDates>> getHabitForDate(DateTime date) async {
+    return _habitDao.getHabitsForDate(date);
+  }
 }
