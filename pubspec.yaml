@@ -39,6 +39,7 @@ dependencies:
   sqflite: ^2.4.3
   provider: ^6.1.5+1
   calendar_date_picker2: ^3.0.0
+  intl: ^0.20.3
 dev_dependencies:
   floor_generator: ^1.4.0
   build_runner: ^2.1.2
