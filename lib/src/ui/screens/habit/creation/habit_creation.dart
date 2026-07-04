@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:habit_tracker/src/domain/repostiories/habit_repository.dart';
 import 'package:habit_tracker/src/ui/core/shared/full_width_button.dart';
 import 'package:habit_tracker/src/ui/core/theme.dart';
 import 'package:habit_tracker/src/ui/core/theme/text_levels.dart';
-import 'package:habit_tracker/src/ui/screens/habit/creation/habit_dto.dart';
+import 'package:habit_tracker/src/ui/screens/habit/creation/habit_creation_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/habit/creation/priority_level.dart';
+import 'package:provider/provider.dart';
 
 import 'frequency_selector.dart';
 
 class HabitCreation extends StatefulWidget {
-  final HabitRepository habitRepository;
-
-  const HabitCreation({super.key, required this.habitRepository});
+  const HabitCreation({super.key});
 
   @override
   State<StatefulWidget> createState() => _HabitCreationState();
@@ -22,13 +20,10 @@ class _HabitCreationState extends State<HabitCreation> {
   final _titleController = TextEditingController();
   String _selectedFreq = "Daily";
   static const _frequencyOptions = ["Daily", "Weekly", "Montly"];
-  HabitDto dto = HabitDto();
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-      'Dates: ${dto.dates?.map((date) => date.toIso8601String()).join(', ')}',
-    );
+    final habitCraetionViewModel = context.watch<HabitCreationViewmodel>();
 
     return Scaffold(
       appBar: AppBar(
@@ -54,7 +49,7 @@ class _HabitCreationState extends State<HabitCreation> {
                 keyboardType: TextInputType.text,
                 style: TextStylePalette.bodyText,
                 onChanged: (value) {
-                  dto.name = value;
+                  habitCraetionViewModel.dto.name = value;
                 },
                 maxLength: 20,
               ),
@@ -91,17 +86,12 @@ class _HabitCreationState extends State<HabitCreation> {
                   ),
                 ),
               ),
-              FrequencySelector(selectedFreq: _selectedFreq, dto: dto),
-              PriorityLevel(dto: dto),
+              FrequencySelector(selectedFreq: _selectedFreq, dto: habitCraetionViewModel.dto),
+              PriorityLevel(dto: habitCraetionViewModel.dto),
               PrimaryFullWidthButton(
                 "Save Habit",
                 onPressed: () async {
-                  await widget.habitRepository.saveHabitWithDates(
-                    dto.toModel(),
-                  );
-                  if (context.mounted) {
-                    context.pop();
-                  }
+                  habitCraetionViewModel.saveHabit(context);
                 },
               ),
             ],

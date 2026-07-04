@@ -4,6 +4,7 @@ import 'package:habit_tracker/src/domain/repostiories/active_user_repository.dar
 import 'package:habit_tracker/src/domain/repostiories/habit_repository.dart';
 import 'package:habit_tracker/src/ui/page_not_found/page_not_found_view.dart';
 import 'package:habit_tracker/src/ui/screens/habit/creation/habit_creation.dart';
+import 'package:habit_tracker/src/ui/screens/habit/creation/habit_creation_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/habit/details/habit_details.dart';
 import 'package:habit_tracker/src/ui/screens/home/home_view.dart';
 import 'package:habit_tracker/src/ui/screens/home/home_viewmodel.dart';
@@ -43,8 +44,11 @@ final router = GoRouter(
             GoRoute(path: "details", builder: (_, _) => HabitDetails()),
             GoRoute(
               path: "creation",
-              builder: (ctx, state) =>
-                  HabitCreation(habitRepository: ctx.watch()),
+              builder: (ctx, state) => ChangeNotifierProvider(
+                create: (context) =>
+                    HabitCreationViewmodel(context.read<HabitRepository>()),
+                child: const HabitCreation(),
+              ),
             ),
           ],
           builder: (_, _) => Scaffold(),
