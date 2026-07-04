@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 class ProfileView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return Text("profile view");
+    return Scaffold(
+      body: Center(
+        child: Text("profile view"),
+      ),
+    );
   }
 }
