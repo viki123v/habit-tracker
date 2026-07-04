@@ -50,6 +50,10 @@ class HomeViewmodel extends ChangeNotifier {
     popUpWidget = NiceWork(points: earnedPoints, homeViewmodel: this);
     notifyListeners();
 
+    await _habitRepository.markHabitAsCompleted(
+      habitWithDates.habit.name,
+      DateTime.now(),
+    );
     await _activeUserRepository.addPoints(earnedPoints);
 
     if (_habits.isEmpty) {
@@ -68,17 +72,16 @@ class HomeViewmodel extends ChangeNotifier {
 
   Future<void> _loadHabitsForToday() async {
     final today = DateTime.now();
-    final isCompleted = await _habitRepository.isDayCompleted(today);
-    final habits = isCompleted
-        ? <HabitWithDates>[]
-        : await _habitRepository.getHabitForDate(today);
+    final habits = await _habitRepository.getHabitForDate(today);
 
     _habits
       ..clear()
       ..addAll(habits);
 
-    if (!isCompleted && _habits.isEmpty) {
+    if (_habits.isEmpty) {
       await _habitRepository.markDayAsCompleted(today);
+    } else {
+      await _habitRepository.markDayAsIncomplete(today);
     }
 
     await _loadWeeklyCompletionStatuses();

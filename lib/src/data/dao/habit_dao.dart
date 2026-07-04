@@ -1,6 +1,7 @@
 import 'package:floor/floor.dart';
 
 import '../models/completed_day.dart';
+import '../models/completed_habit.dart';
 import '../models/habit.dart';
 import '../models/habit_date.dart';
 
@@ -37,4 +38,16 @@ abstract class HabitDao {
 
   @Query("DELETE FROM CompletedDays WHERE date = :date")
   Future<void> deleteCompletedDay(DateTime date);
+
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> saveCompletedHabit(CompletedHabit completedHabit);
+
+  @Query(
+    "SELECT * FROM CompletedHabits "
+    "WHERE habitName = :habitName AND date = :date LIMIT 1",
+  )
+  Future<CompletedHabit?> getCompletedHabit(String habitName, DateTime date);
+
+  @Query("SELECT * FROM CompletedHabits WHERE date = :date")
+  Future<List<CompletedHabit>> getCompletedHabitsForDate(DateTime date);
 }

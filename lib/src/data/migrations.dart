@@ -24,4 +24,10 @@ final migration3To4 = Migration(3, 4, (database) async {
   );
 });
 
-final migrations = [migration1To2, migration2To3, migration3To4];
+final migration4To5 = Migration(4, 5, (database) async {
+  await database.execute(
+    'CREATE TABLE IF NOT EXISTS `CompletedHabits` (`habitName` TEXT NOT NULL, `date` INTEGER NOT NULL, PRIMARY KEY (`habitName`, `date`))',
+  );
+});
+
+final migrations = [migration1To2, migration2To3, migration3To4, migration4To5];
