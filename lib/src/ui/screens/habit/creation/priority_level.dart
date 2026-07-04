@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/src/ui/core/theme.dart';
+import 'package:habit_tracker/src/ui/screens/habit/creation/habit_creation_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/habit/creation/habit_dto.dart';
 
 class PriorityLevel extends StatefulWidget {
-  HabitDto _dto;
-  int _fireSelected = 0;
-  static int _maxFireIconsCount = 5;
+  final HabitCreationViewmodel habitCreationViewmodel; 
+  static int _maxFireIconsCount = 5; 
 
-  PriorityLevel({super.key, required this._dto});
+  PriorityLevel({super.key, required this.habitCreationViewmodel});
 
   @override
   State<StatefulWidget> createState() => _PriorityLevelState();
@@ -17,8 +17,6 @@ class _PriorityLevelState extends State<PriorityLevel> {
 
   @override
   Widget build(BuildContext context) {
-    widget._dto.priorityLevel = widget._fireSelected;
-
     return Padding(
       padding: EdgeInsetsGeometry.only(top: Spacings.buttonVertical),
       child: Column(
@@ -57,11 +55,11 @@ class _PriorityLevelState extends State<PriorityLevel> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: List.generate(PriorityLevel._maxFireIconsCount, (i) {
-                      final opacity =  widget._fireSelected >= i ? 0.9 : 0.2;
+                      final opacity =  widget.habitCreationViewmodel.dto.priorityLevel != null && widget.habitCreationViewmodel.dto.priorityLevel! >= i ? 0.9 : 0.2;
                       return IconButton(
                       onPressed: (){
                         setState(() {
-                          widget._fireSelected = i;
+                          widget.habitCreationViewmodel.selectFires(i); 
                         });
                       },
                           icon: Icon(

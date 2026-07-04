@@ -87,7 +87,7 @@ class _HabitCreationState extends State<HabitCreation> {
                 ),
               ),
               FrequencySelector(selectedFreq: _selectedFreq, dto: habitCraetionViewModel.dto),
-              PriorityLevel(dto: habitCraetionViewModel.dto),
+              PriorityLevel(habitCreationViewmodel: habitCraetionViewModel,),
               PrimaryFullWidthButton(
                 "Save Habit",
                 onPressed: () async {

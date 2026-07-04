@@ -15,4 +15,10 @@ class HabitCreationViewmodel extends ChangeNotifier {
       ctx.pop();
     }
   }
+
+  void selectFires(int fires){
+    dto.priorityLevel = fires; 
+
+    notifyListeners();
+  }
 }
