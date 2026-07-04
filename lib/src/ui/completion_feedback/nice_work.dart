@@ -7,7 +7,7 @@ import 'package:habit_tracker/src/ui/core/theme/spacings.dart';
 import 'package:habit_tracker/src/ui/core/theme/text_levels.dart';
 import 'package:habit_tracker/src/ui/screens/home/home_viewmodel.dart';
 
-class NiceWork extends StatelessWidget {
+class NiceWork extends StatefulWidget {
   const NiceWork({
     super.key,
     required this.points,
@@ -18,87 +18,143 @@ class NiceWork extends StatelessWidget {
   final HomeViewmodel homeViewmodel;
 
   @override
+  State<NiceWork> createState() => _NiceWorkState();
+}
+
+class _NiceWorkState extends State<NiceWork>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _fadeAnimation;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Durations.medium2,
+      reverseDuration: Durations.short4,
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+      reverseCurve: Curves.easeIn,
+    );
+    _scaleAnimation = Tween<double>(begin: 0.88, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutBack,
+        reverseCurve: Curves.easeIn,
+      ),
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _close() async {
+    await _controller.reverse();
+    if (mounted) {
+      widget.homeViewmodel.closePopUp();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Positioned.fill(
-          child: ColoredBox(
-            color: Colors.black.withAlpha((255 * 0.58).round()),
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: ColoredBox(
+              color: Colors.black.withAlpha((255 * 0.58).round()),
+            ),
           ),
         ),
         LayoutBuilder(
           builder: (context, constraints) {
             return Center(
-              child: Container(
-                width: constraints.maxWidth * 0.8,
-                height: constraints.maxHeight * 0.45,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderSizings.xl,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(Spacings.comfortable),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        spacing: Spacings.cozy,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: ScaleTransition(
+                  scale: _scaleAnimation,
+                  child: Container(
+                    width: constraints.maxWidth * 0.8,
+                    height: constraints.maxHeight * 0.45,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderSizings.xl,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(Spacings.comfortable),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const _CompletionBadge(),
-                          Text("Nice Work!").title(),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderSizings.xl,
-                              color: ColorPalette.secondary.withAlpha(
-                                (255 * 0.1).round(),
+                          Column(
+                            spacing: Spacings.cozy,
+                            children: [
+                              const _CompletionBadge(),
+                              Text("Nice Work!").title(),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderSizings.xl,
+                                  color: ColorPalette.secondary.withAlpha(
+                                    (255 * 0.1).round(),
+                                  ),
+                                  border: BoxBorder.all(
+                                    color: ColorPalette.secondary,
+                                    width: 0.5,
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsetsGeometry.all(
+                                    Spacings.tight,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: ColorPalette.secondary,
+                                      ),
+                                      Text(
+                                        "+${widget.points} Points",
+                                        style: TextStyle(
+                                          color: ColorPalette.secondary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              border: BoxBorder.all(
-                                color: ColorPalette.secondary,
-                                width: 0.5,
+                            ],
+                          ),
+                          FilledButton(
+                            onPressed: _close,
+                            style: FilledButton.styleFrom(
+                              shape: ContinuousRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.all(
+                                  Radius.circular(40),
+                                ),
                               ),
                             ),
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.all(Spacings.tight),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: ColorPalette.secondary,
-                                  ),
-                                  Text(
-                                    "+$points Points",
-                                    style: TextStyle(
-                                      color: ColorPalette.secondary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                            child: Text(
+                              "Keep going",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: rawProperties.textSize.size400
+                                    .toDouble(),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      FilledButton(
-                        onPressed: () {
-                          homeViewmodel.closePopUp();
-                        },
-                        style: FilledButton.styleFrom(
-                          shape: ContinuousRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.all(
-                              Radius.circular(40),
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          "Keep going",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: rawProperties.textSize.size400.toDouble(),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
