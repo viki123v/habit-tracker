@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:habit_tracker/src/domain/repostiories/habit_repository.dart';
 import 'package:habit_tracker/src/ui/core/shared/full_width_button.dart';
 import 'package:habit_tracker/src/ui/core/theme.dart';
@@ -31,7 +32,9 @@ class _HabitCreationState extends State<HabitCreation> {
       appBar: AppBar(
         title: Text("Create a habit").caption(),
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            context.pop();
+          },
           icon: Icon(Icons.keyboard_arrow_left),
         ),
       ),
