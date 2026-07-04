@@ -35,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
           ? CreateHabitButton()
           : SizedBox.shrink(),
       bottomNavigationBar: const HomeBottomNavbar(name: ScreenNames.Home),
-      body: _HomeViewBody(),
+      body: const _HomeViewBody(),
     );
   }
 }
@@ -54,122 +54,148 @@ class _HomeViewBodyState extends State<_HomeViewBody> {
 
     return Stack(
       children: [
-        Padding(
-          padding: EdgeInsetsGeometry.only(
-            top: Spacings.loose,
-            left: Spacings.spacious,
-            right: Spacings.spacious,
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(DateFormat('EEE, MMMM d').format(DateTime.now())),
-                ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final verticalPadding = Spacings.loose + Spacings.section;
+
+            return SingleChildScrollView(
+              padding: EdgeInsets.only(
+                top: Spacings.loose,
+                bottom: Spacings.section,
+                left: Spacings.spacious,
+                right: Spacings.spacious,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Focus Today").heading(),
-                  TextButton(
-                    onPressed: () => {context.push("/report")},
-                    child: Row(
-                      children: [
-                        Text(
-                          "Stats",
-                          style: TextStyle(
-                            color: ColorPalette.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: rawProperties.textSize.size500.toDouble(),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsGeometry.only(left: Spacings.cozy),
-                          child: Text(
-                            ">",
-                            style: TextStyle(
-                              color: ColorPalette.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: rawProperties.textSize.size500
-                                  .toDouble(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: (constraints.maxHeight - verticalPadding).clamp(
+                    0,
+                    double.infinity,
                   ),
-                ],
-              ),
-              _WeeklyConsistency(
-                weeklyPercent: homeViewModel.weeklyCompletionPercent,
-                statusPerWeek: homeViewModel.weeklyCompletionStatuses,
-              ),
-              Padding(
-                padding: EdgeInsetsGeometry.only(top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("Priority habits".toUpperCase()).heading(),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: BoxBorder.all(width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      padding: EdgeInsets.only(
-                        left: Spacings.tight,
-                        right: Spacings.tight,
-                      ),
-                      child: Text(
-                        "${homeViewModel.habitsLeft} left",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
                 ),
-              ),
-              Expanded(
-                child: FutureBuilder<void>(
-                  future: homeViewModel.getHabitsForToday(),
-                  builder: (ctx, snap) {
-                    String? userMessage;
-                    if (snap.connectionState == ConnectionState.waiting) {
-                      userMessage = 'Loading...';
-                    } else if (snap.hasError) {
-                      debugPrint(
-                        'Failed to load today\'s habits: ${snap.error}',
-                      );
-                      userMessage = 'Could not load habits';
-                    } else if (homeViewModel.habits.isEmpty) {
-                      userMessage = "No habits for today";
-                    }
-                    return Padding(
-                      padding: EdgeInsetsGeometry.only(top: Spacings.relaxed),
-                      child: userMessage != null
-                          ? Center(child: Text(userMessage).caption())
-                          : ListView.separated(
-                              itemCount: homeViewModel.habits.length,
-                              separatorBuilder: (_, _) =>
-                                  SizedBox(height: Spacings.comfortable),
-                              itemBuilder: (context, index) {
-                                final habitWithDates =
-                                    homeViewModel.habits[index];
-                                return HabitItem(
-                                  key: ValueKey(habitWithDates.habit.name),
-                                  habitWithDates: habitWithDates,
-                                  onDone: () => homeViewModel.markHabitAsDone(
-                                    habitWithDates,
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            DateFormat('EEE, MMMM d').format(DateTime.now()),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Focus Today").heading(),
+                          TextButton(
+                            onPressed: () => {context.push("/report")},
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Stats",
+                                  style: TextStyle(
+                                    color: ColorPalette.primary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: rawProperties.textSize.size500
+                                        .toDouble(),
                                   ),
-                                );
-                              },
+                                ),
+                                Padding(
+                                  padding: EdgeInsetsGeometry.only(
+                                    left: Spacings.cozy,
+                                  ),
+                                  child: Text(
+                                    ">",
+                                    style: TextStyle(
+                                      color: ColorPalette.primary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: rawProperties.textSize.size500
+                                          .toDouble(),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                    );
-                  },
+                          ),
+                        ],
+                      ),
+                      _WeeklyConsistency(
+                        weeklyPercent: homeViewModel.weeklyCompletionPercent,
+                        statusPerWeek: homeViewModel.weeklyCompletionStatuses,
+                      ),
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text("Priority habits".toUpperCase()).heading(),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: BoxBorder.all(width: 1),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                              ),
+                              padding: EdgeInsets.only(
+                                left: Spacings.tight,
+                                right: Spacings.tight,
+                              ),
+                              child: Text(
+                                "${homeViewModel.habitsLeft} left",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: FutureBuilder<void>(
+                          future: homeViewModel.getHabitsForToday(),
+                          builder: (ctx, snap) {
+                            String? userMessage;
+                            if (snap.connectionState ==
+                                ConnectionState.waiting) {
+                              userMessage = 'Loading...';
+                            } else if (snap.hasError) {
+                              debugPrint(
+                                'Failed to load today\'s habits: ${snap.error}',
+                              );
+                              userMessage = 'Could not load habits';
+                            } else if (homeViewModel.habits.isEmpty) {
+                              userMessage = "No habits for today";
+                            }
+
+                            return Padding(
+                              padding: EdgeInsets.only(top: Spacings.relaxed),
+                              child: userMessage != null
+                                  ? Center(child: Text(userMessage).caption())
+                                  : Column(
+                                      spacing: Spacings.comfortable,
+                                      children: homeViewModel.habits.map((
+                                        habitWithDate,
+                                      ) {
+                                        return HabitItem(
+                                          key: ValueKey(
+                                            habitWithDate.habit.name,
+                                          ),
+                                          habitWithDates: habitWithDate,
+                                          onDone: () => homeViewModel
+                                              .markHabitAsDone(habitWithDate),
+                                        );
+                                      }).toList(),
+                                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            );
+          },
         ),
         if (homeViewModel.popUpWidget != null)
           Positioned.fill(child: homeViewModel.popUpWidget!),

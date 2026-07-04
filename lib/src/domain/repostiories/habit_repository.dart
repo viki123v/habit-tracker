@@ -49,7 +49,8 @@ class HabitRepository {
   }
 
   Future<List<HabitWithDates>> getHabitForDate(DateTime date) async {
-    return _habitDao.getHabitsForDate(date);
+    final habits = await getHabitsWithDates();
+    return habits.where((habit) => habit.occursOn(date)).toList();
   }
 
   Future<bool> isDayCompleted(DateTime date) async {
