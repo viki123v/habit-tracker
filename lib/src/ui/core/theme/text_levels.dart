@@ -13,7 +13,7 @@ class TextStylePalette {
   );
   static final TextStyle heading = TextStyle(
     fontFamily: rawProperties.families.primary,
-    fontSize: rawProperties.textSize.size700.toDouble(),
+    fontSize: rawProperties.textSize.size600.toDouble(),
     letterSpacing: rawProperties.lineSize.size50.toDouble(),
     fontWeight: rawProperties.fontWeight.bold,
   );
