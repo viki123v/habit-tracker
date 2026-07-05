@@ -22,7 +22,7 @@ void main() async {
       providers: [
         Provider<AppDatabase>.value(value: database),
         Provider<ActiveUserDao>.value(value: database.activeUserDao),
-        Provider<ActiveUserRepository>(
+        ChangeNotifierProvider<ActiveUserRepository>(
           create: (context) =>
               ActiveUserRepository(context.read<ActiveUserDao>()),
         ),
