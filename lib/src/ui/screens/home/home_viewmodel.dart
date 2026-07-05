@@ -7,6 +7,7 @@ import 'package:habit_tracker/src/ui/completion_feedback/nice_work.dart';
 class HomeViewmodel extends ChangeNotifier {
   HomeViewmodel(this._habitRepository, this._activeUserRepository) {
     _habitsForToday = _loadHabitsForToday();
+    _hasHabitsFuture = _loadHasHabits();
   }
 
   final HabitRepository _habitRepository;
@@ -14,10 +15,16 @@ class HomeViewmodel extends ChangeNotifier {
   final List<HabitWithDates> _habits = [];
   final List<bool> _weeklyCompletionStatuses = [];
   late Future<void> _habitsForToday;
+  late Future<void> _hasHabitsFuture;
+  bool _hasHabits = false;
 
   Widget? popUpWidget;
 
   Future<void> getHabitsForToday() => _habitsForToday;
+
+  Future<void> getHasHabits() => _hasHabitsFuture;
+
+  bool get hasHabits => _hasHabits;
 
   List<HabitWithDates> get habits => List.unmodifiable(_habits);
 
@@ -68,6 +75,18 @@ class HomeViewmodel extends ChangeNotifier {
     _habitsForToday = _loadHabitsForToday();
     notifyListeners();
     await _habitsForToday;
+  }
+
+  Future<void> refreshHasHabits() async {
+    _hasHabitsFuture = _loadHasHabits();
+    notifyListeners();
+    await _hasHabitsFuture;
+  }
+
+  Future<void> _loadHasHabits() async {
+    final habits = await _habitRepository.getHabitsWithDates();
+    _hasHabits = habits.isNotEmpty;
+    notifyListeners();
   }
 
   Future<void> _loadHabitsForToday() async {
