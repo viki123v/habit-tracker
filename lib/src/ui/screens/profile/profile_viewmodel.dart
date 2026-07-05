@@ -48,9 +48,15 @@ class ProfileViewmodel extends ChangeNotifier {
     final docsDir = await getApplicationDocumentsDirectory();
     final extension = picked.path.split('.').last;
     final savedPath =
-        '${docsDir.path}/profile_${currentUser.username}.$extension';
+        '${docsDir.path}/profile_${currentUser.username}_'
+        '${DateTime.now().millisecondsSinceEpoch}.$extension';
     await File(picked.path).copy(savedPath);
-    await FileImage(File(savedPath)).evict();
+
+    final oldPath = currentUser.imageName;
+    if (oldPath != null && oldPath.startsWith('/')) {
+      final oldFile = File(oldPath);
+      if (await oldFile.exists()) await oldFile.delete();
+    }
 
     final updatedUser = ActiveUser(
       username: currentUser.username,
