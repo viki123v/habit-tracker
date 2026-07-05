@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:habit_tracker/src/exceptions/habit_dto_conversion.dart';
 import 'package:habit_tracker/src/ui/core/shared/full_width_button.dart';
 import 'package:habit_tracker/src/ui/core/theme.dart';
 import 'package:habit_tracker/src/ui/core/theme/text_levels.dart';
@@ -23,7 +24,7 @@ class _HabitCreationState extends State<HabitCreation> {
 
   @override
   Widget build(BuildContext context) {
-    final habitCraetionViewModel = context.watch<HabitCreationViewmodel>();
+    final habitCreationViewModel = context.watch<HabitCreationViewmodel>();
 
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +50,7 @@ class _HabitCreationState extends State<HabitCreation> {
                 keyboardType: TextInputType.text,
                 style: TextStylePalette.bodyText,
                 onChanged: (value) {
-                  habitCraetionViewModel.dto.name = value;
+                  habitCreationViewModel.dto.name = value;
                 },
                 maxLength: 20,
               ),
@@ -86,12 +87,73 @@ class _HabitCreationState extends State<HabitCreation> {
                   ),
                 ),
               ),
-              FrequencySelector(selectedFreq: _selectedFreq, dto: habitCraetionViewModel.dto),
-              PriorityLevel(habitCreationViewmodel: habitCraetionViewModel,),
+              FrequencySelector(
+                selectedFreq: _selectedFreq,
+                dto: habitCreationViewModel.dto,
+              ),
+              PriorityLevel(habitCreationViewModel: habitCreationViewModel),
               PrimaryFullWidthButton(
                 "Save Habit",
                 onPressed: () async {
-                  habitCraetionViewModel.saveHabit(context);
+                  try {
+                    await habitCreationViewModel.saveHabit(context);
+                  } on HabitDtoConversionException catch (e) {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (dialogContext) {
+                          final colorScheme = Theme.of(
+                            dialogContext,
+                          ).colorScheme;
+
+                          return AlertDialog(
+                            icon: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: colorScheme.errorContainer,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.error_outline_rounded,
+                                color: colorScheme.onErrorContainer,
+                                size: 32,
+                              ),
+                            ),
+                            iconPadding: const EdgeInsets.fromLTRB(
+                              24,
+                              24,
+                              24,
+                              12,
+                            ),
+                            title: const Text(
+                              "Cannot create habit",
+                              textAlign: TextAlign.center,
+                            ),
+                            content: Text(e.msg, textAlign: TextAlign.center),
+                            actionsPadding: const EdgeInsets.fromLTRB(
+                              24,
+                              8,
+                              24,
+                              24,
+                            ),
+                            actions: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: FilledButton(
+                                  onPressed: () => dialogContext.pop(),
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: colorScheme.error,
+                                    foregroundColor: colorScheme.onError,
+                                  ),
+                                  child: const Text("Got it"),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  }
                 },
               ),
             ],

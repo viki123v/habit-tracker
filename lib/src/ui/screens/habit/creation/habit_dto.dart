@@ -1,6 +1,7 @@
 
 import 'package:habit_tracker/src/data/models/habit.dart';
 import 'package:habit_tracker/src/data/models/habit_with_dates.dart';
+import 'package:habit_tracker/src/exceptions/habit_dto_conversion.dart';
 
 class HabitDto {
   String? name;
@@ -9,20 +10,21 @@ class HabitDto {
   int? priorityLevel; 
 
   void _validate() {
-    if (name == null) {
-      throw ArgumentError.notNull('name');
+    final maxPriorityLevel = 4; 
+    if (name == null || name!.trim().isEmpty) {
+      throw HabitDtoConversionException(msg: "Name is empty");
     }
-    if (dates == null) {
-      throw ArgumentError.notNull('dates');
+    if (dates == null || dates!.isEmpty) {
+      throw HabitDtoConversionException(msg: "Dates are empty");
     }
     if (type == null) {
-      throw ArgumentError.notNull('type');
+      throw HabitDtoConversionException(msg: "The type of the habit isn't defined");
     }
     if (priorityLevel == null) {
-      throw ArgumentError.notNull('priorityLevel');
+      throw HabitDtoConversionException(msg: "Priority level is empty"); 
     }
-    if(priorityLevel! > 4){
-      throw ArgumentError.value(priorityLevel, "The priority level cannot be greater than 5");
+    if(priorityLevel! > maxPriorityLevel){
+      throw HabitDtoConversionException(msg: "The priority level cannot be above ${maxPriorityLevel + 1}");
     }
   }
 
