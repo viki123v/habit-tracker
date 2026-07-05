@@ -8,7 +8,7 @@ class HabitDto {
   HabitType? type;
   int? priorityLevel; 
 
-  void _valid() {
+  void _validate() {
     if (name == null) {
       throw ArgumentError.notNull('name');
     }
@@ -27,7 +27,7 @@ class HabitDto {
   }
 
   HabitWithDates toModel() {
-    _valid();
+    _validate();
 
     return HabitWithDates(
       habit: Habit(name!, type!.name, priorityLevel!),
