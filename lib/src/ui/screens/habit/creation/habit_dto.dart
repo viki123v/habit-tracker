@@ -6,7 +6,7 @@ class HabitDto {
   String? name;
   List<DateTime>? dates;
   HabitType? type;
-  int? priorityLevel; // At most 3 
+  int? priorityLevel; 
 
   void _valid() {
     if (name == null) {
@@ -20,6 +20,9 @@ class HabitDto {
     }
     if (priorityLevel == null) {
       throw ArgumentError.notNull('priorityLevel');
+    }
+    if(priorityLevel! > 4){
+      throw ArgumentError.value(priorityLevel, "The priority level cannot be greater than 5");
     }
   }
 
