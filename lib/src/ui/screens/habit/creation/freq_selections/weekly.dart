@@ -17,6 +17,14 @@ class WeeklyWidget extends StatefulWidget {
 }
 
 class _WeeklyDays extends State<WeeklyWidget> {
+  final _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   List<DateTime> _selectedDaysToCurrentWeekDates(List<int> selectedDays) {
     final today = DateTime.now();
     final currentDate = DateTime(today.year, today.month, today.day);
@@ -43,7 +51,7 @@ class _WeeklyDays extends State<WeeklyWidget> {
     widget.dto.dates = _selectedDaysToCurrentWeekDates(widget._selectedDays);
 
     return SizedBox(
-      height: 52,
+      height: 60,
       child: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(
           dragDevices: {
@@ -53,43 +61,60 @@ class _WeeklyDays extends State<WeeklyWidget> {
             PointerDeviceKind.stylus,
           },
         ),
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: WeeklyWidget._days.length,
-          separatorBuilder: (_, _) => const SizedBox(width: 10),
-          itemBuilder: (context, index) {
-            if (widget._selectedDays.contains(index)) {
-              return FilledButton(
-                style: FilledButton.styleFrom(
-                  fixedSize: const Size.square(52),
-                  padding: EdgeInsets.zero,
-                  shape: const CircleBorder(),
-                ),
-                onPressed: () {
-                  setState(() {
-                    widget._selectedDays.remove(index);
-                  });
-                },
-                child: Text(WeeklyWidget._days[index]).bodyText(),
-              );
-            }
+        child: RawScrollbar(
+          controller: _scrollController,
+          thumbVisibility: true,
+          trackVisibility: true,
+          interactive: true,
+          scrollbarOrientation: ScrollbarOrientation.bottom,
+          padding: EdgeInsets.zero,
+          thickness: 4,
+          radius: const Radius.circular(2),
+          thumbColor: Theme.of(context).colorScheme.primary,
+          trackColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          trackBorderColor: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: ListView.separated(
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: WeeklyWidget._days.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 10),
+              itemBuilder: (context, index) {
+                if (widget._selectedDays.contains(index)) {
+                  return FilledButton(
+                    style: FilledButton.styleFrom(
+                      fixedSize: const Size.square(52),
+                      padding: EdgeInsets.zero,
+                      shape: const CircleBorder(),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        widget._selectedDays.remove(index);
+                      });
+                    },
+                    child: Text(WeeklyWidget._days[index]).bodyText(),
+                  );
+                }
 
-            return OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                fixedSize: const Size.square(52),
-                padding: EdgeInsets.zero,
-                shape: const CircleBorder(),
-                backgroundColor: Colors.grey.withAlpha((.03 * 255).round()),
-              ),
-              onPressed: () {
-                setState(() {
-                  widget._selectedDays.add(index);
-                });
+                return OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    fixedSize: const Size.square(52),
+                    padding: EdgeInsets.zero,
+                    shape: const CircleBorder(),
+                    backgroundColor: Colors.grey.withAlpha((.03 * 255).round()),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      widget._selectedDays.add(index);
+                    });
+                  },
+                  child: Text(WeeklyWidget._days[index]).bodyText(),
+                );
               },
-              child: Text(WeeklyWidget._days[index]).bodyText(),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
