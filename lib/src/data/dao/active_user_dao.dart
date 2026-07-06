@@ -9,6 +9,9 @@ abstract class ActiveUserDao {
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> saveActiveUser(ActiveUser user);
 
+  @Query("UPDATE ActiveUser SET points = points + :points")
+  Future<void> addPoints(int points);
+
   @Query("DELETE FROM ActiveUser")
   Future<void> clearActiveUser();
 }

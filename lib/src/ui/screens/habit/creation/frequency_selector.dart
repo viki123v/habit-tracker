@@ -5,11 +5,15 @@ import 'freq_selections/monthly.dart';
 import 'freq_selections/weekly.dart';
 import 'habit_dto.dart';
 
-class FrequencySelector extends StatefulWidget{
+class FrequencySelector extends StatefulWidget {
   final String _selectedFreq;
-  HabitDto _dto;
+  final HabitDto _dto;
 
-  FrequencySelector({super.key, required this._selectedFreq, required this._dto});
+  const FrequencySelector({
+    super.key,
+    required this._selectedFreq,
+    required this._dto,
+  });
 
   @override
   State<FrequencySelector> createState() => _FrequencySelectorState();
@@ -18,15 +22,16 @@ class FrequencySelector extends StatefulWidget{
 class _FrequencySelectorState extends State<FrequencySelector> {
   @override
   Widget build(BuildContext context) {
-    if(MontlyWidget.option == widget._selectedFreq) {
+    if (MontlyWidget.option == widget._selectedFreq) {
       widget._dto.type = HabitType.monthly;
       return MontlyWidget(dto: widget._dto);
-    }
-    else if(WeeklyWidget.option == widget._selectedFreq) {
+    } else if (WeeklyWidget.option == widget._selectedFreq) {
       widget._dto.type = HabitType.weekly;
       return WeeklyWidget(dto: widget._dto);
     }
+
     widget._dto.type = HabitType.daily;
+    widget._dto.dates = [];
     return Container();
   }
 }
