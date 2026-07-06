@@ -4,7 +4,7 @@ import 'package:habit_tracker/src/ui/core/theme/raw.dart';
 
 export 'package:habit_tracker/src/ui/core/theme/hex_colors.dart';
 
-class _TextStyling {
+class TextStylePalette {
   static final TextStyle title = TextStyle(
     fontFamily: rawProperties.families.primary,
     fontSize: rawProperties.textSize.size600.toDouble(),
@@ -14,7 +14,7 @@ class _TextStyling {
   static final TextStyle heading = TextStyle(
     fontFamily: rawProperties.families.primary,
     fontSize: rawProperties.textSize.size700.toDouble(),
-    letterSpacing: rawProperties.lineSize.size600.toDouble(),
+    letterSpacing: rawProperties.lineSize.size50.toDouble(),
     fontWeight: rawProperties.fontWeight.bold,
   );
   static final TextStyle subheading = TextStyle(
@@ -53,19 +53,19 @@ class _TextStyling {
 }
 
 extension TextStyleExtension on Text {
-  Text title() => _withStyle(_TextStyling.title, data);
+  Text title() => _withStyle(TextStylePalette.title, data);
 
-  Text heading() => _withStyle(_TextStyling.heading, data);
+  Text heading() => _withStyle(TextStylePalette.heading, data);
 
-  Text subheading() => _withStyle(_TextStyling.subheading, data);
+  Text subheading() => _withStyle(TextStylePalette.subheading, data);
 
-  Text bodyText() => _withStyle(_TextStyling.bodyText, data);
+  Text bodyText() => _withStyle(TextStylePalette.bodyText, data);
 
-  Text link() => _withStyle(_TextStyling.link, data);
+  Text link() => _withStyle(TextStylePalette.link, data);
 
-  Text caption() => _withStyle(_TextStyling.caption, data);
+  Text caption() => _withStyle(TextStylePalette.caption, data);
 
-  Text overline() => _withStyle(_TextStyling.overline, data?.toUpperCase());
+  Text overline() => _withStyle(TextStylePalette.overline, data?.toUpperCase());
 
   Text _withStyle(TextStyle textStyle, String? text) {
     final mergedStyle = style?.merge(textStyle) ?? textStyle;

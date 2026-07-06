@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/src/data/dao/active_user_dao.dart';
+import 'package:habit_tracker/src/data/dao/habit_dao.dart';
 import 'package:habit_tracker/src/data/database.dart';
+import 'package:habit_tracker/src/data/migrations.dart';
 import 'package:habit_tracker/src/domain/repostiories/active_user_repository.dart';
+import 'package:habit_tracker/src/domain/repostiories/habit_repository.dart';
 import 'package:habit_tracker/src/routing/routes.dart';
 import 'package:habit_tracker/src/ui/core/theme/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +14,7 @@ void main() async {
 
   final database = await $FloorAppDatabase
       .databaseBuilder('habit_tracker.db')
+      .addMigrations(migrations)
       .build();
 
   runApp(
@@ -21,6 +25,10 @@ void main() async {
         Provider<ActiveUserRepository>(
           create: (context) =>
               ActiveUserRepository(context.read<ActiveUserDao>()),
+        ),
+        Provider<HabitDao>.value(value: database.habitDao),
+        Provider<HabitRepository>(
+          create: (context) => HabitRepository(context.read<HabitDao>()),
         ),
       ],
       child: MaterialApp.router(
