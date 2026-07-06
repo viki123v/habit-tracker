@@ -16,6 +16,13 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  late final Future<bool> _isLoggedIn;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoggedIn = context.read<LoginViewModel>().isLoggedIn();
+  }
 
   @override
   void dispose() {
@@ -39,6 +46,53 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<LoginViewModel>();
 
+    return FutureBuilder<bool>(
+      future: _isLoggedIn,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.data == true) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) context.go('/home');
+          });
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        return _LoginUI(
+          formKey: widget._formKey,
+          emailController: widget._emailController,
+          passwordController: widget._passwordController,
+          viewModel: viewModel,
+          onLogin: _login,
+        );
+      },
+    );
+  }
+}
+
+class _LoginUI extends StatelessWidget {
+  const _LoginUI({
+    required this.formKey,
+    required this.emailController,
+    required this.passwordController,
+    required this.viewModel,
+    required this.onLogin,
+  });
+
+  final GlobalKey<FormState> formKey;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final LoginViewModel viewModel;
+  final Future<void> Function() onLogin;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -82,12 +136,12 @@ class _LoginViewState extends State<LoginView> {
                       bottom: 10,
                     ),
                     child: Form(
-                      key: widget._formKey,
+                      key: formKey,
                       child: Column(
                         spacing: 18,
                         children: [
                           TextFormField(
-                            controller: widget._emailController,
+                            controller: emailController,
                             enabled: !viewModel.isLoading,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
@@ -108,12 +162,12 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                           TextFormField(
-                            controller: widget._passwordController,
+                            controller: passwordController,
                             enabled: !viewModel.isLoading,
                             obscureText: true,
                             textInputAction: TextInputAction.done,
                             autofillHints: const [AutofillHints.password],
-                            onFieldSubmitted: (_) => _login(),
+                            onFieldSubmitted: (_) => onLogin(),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Enter your password';
@@ -136,7 +190,7 @@ class _LoginViewState extends State<LoginView> {
                               ),
                             ),
                           FilledButton(
-                            onPressed: viewModel.isLoading ? null : _login,
+                            onPressed: viewModel.isLoading ? null : onLogin,
                             child: SizedBox(
                               width: double.infinity,
                               child: Center(
