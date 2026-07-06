@@ -3,12 +3,12 @@ import 'package:habit_tracker/src/ui/core/theme/border_sizings.dart';
 import 'package:habit_tracker/src/ui/core/theme/color_palette.dart';
 import 'package:habit_tracker/src/ui/core/theme/raw.dart';
 import 'package:habit_tracker/src/ui/core/theme/shadows.dart';
-import 'package:habit_tracker/src/ui/core/theme/text_levels.dart';
 
 final lightTheme = _buildTheme(Brightness.light);
 final darkTheme = _buildTheme(Brightness.dark);
 final theme = lightTheme;
 const defaultColorMode = ThemeMode.light;
+final brandLogo = "assets/images/logo.png";
 
 @immutable
 class AppShadows extends ThemeExtension<AppShadows> {
@@ -235,10 +235,10 @@ ThemeData _buildTheme(Brightness brightness) {
 
 ColorScheme _colorScheme(Brightness brightness) {
   final isDark = brightness == Brightness.dark;
-  final primary = HexColors.fromHex(ColorPalette.primary);
-  final secondary = HexColors.fromHex(ColorPalette.secondary);
-  final tertiary = HexColors.fromHex(ColorPalette.supportColor1);
-  final neutral = HexColors.fromHex(ColorPalette.neutral);
+  final primary = ColorPalette.primary;
+  final secondary = ColorPalette.secondary;
+  final tertiary = ColorPalette.supportColor1;
+  final neutral = ColorPalette.neutral;
 
   return ColorScheme(
     brightness: brightness,
@@ -264,14 +264,14 @@ ColorScheme _colorScheme(Brightness brightness) {
     onTertiaryContainer: isDark
         ? _tint(tertiary, 0.84)
         : _shade(tertiary, 0.34),
-    error: HexColors.fromHex(ColorPalette.danger),
+    error: ColorPalette.danger,
     onError: Colors.white,
     errorContainer: isDark
-        ? _withOpacity(HexColors.fromHex(ColorPalette.danger), 0.3)
-        : _tint(HexColors.fromHex(ColorPalette.danger), 0.86),
+        ? _withOpacity(ColorPalette.danger, 0.3)
+        : _tint(ColorPalette.danger, 0.86),
     onErrorContainer: isDark
-        ? _tint(HexColors.fromHex(ColorPalette.danger), 0.84)
-        : _shade(HexColors.fromHex(ColorPalette.danger), 0.35),
+        ? _tint(ColorPalette.danger, 0.84)
+        : _shade(ColorPalette.danger, 0.35),
     surface: isDark ? const Color(0xFF101010) : const Color(0xFFFCFCFD),
     onSurface: isDark ? const Color(0xFFF4F4F5) : const Color(0xFF18181B),
     onSurfaceVariant: isDark ? const Color(0xFFC8C8CC) : neutral,

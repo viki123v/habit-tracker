@@ -5,3 +5,5 @@
 .dart_tool/
 .vscode/
 build/
+.flutter-plugins-dependencies
+*.g.dart
