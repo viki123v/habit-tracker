@@ -13,6 +13,7 @@ import 'package:habit_tracker/src/ui/screens/login/login_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/marketplace/marketplace_view.dart';
 import 'package:habit_tracker/src/ui/screens/profile/prifle_view.dart';
 import 'package:habit_tracker/src/ui/screens/report/report_view.dart';
+import 'package:habit_tracker/src/ui/core/shared/app_shell.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -28,15 +29,38 @@ final router = GoRouter(
         child: LoginView(),
       ),
       routes: [
-        GoRoute(
-          path: "home",
-          builder: (ctx, state) => ChangeNotifierProvider(
-            create: (ctx) => HomeViewmodel(
-              ctx.read<HabitRepository>(),
-              ctx.read<ActiveUserRepository>(),
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigationShell) =>
+              AppShell(navigationShell: navigationShell),
+          branches: [
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: "/home",
+                  builder: (ctx, state) => ChangeNotifierProvider(
+                    create: (ctx) => HomeViewmodel(
+                      ctx.read<HabitRepository>(),
+                      ctx.read<ActiveUserRepository>(),
+                    ),
+                    child: const HomeView(),
+                  ),
+                ),
+              ],
             ),
-            child: const HomeView(),
-          ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: "/marketplace",
+                  builder: (_, _) => MarketplaceView(),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(path: "/profile", builder: (_, _) => ProfileView()),
+              ],
+            ),
+          ],
         ),
         GoRoute(
           path: "habit",
@@ -53,9 +77,7 @@ final router = GoRouter(
           ],
           builder: (_, _) => Scaffold(),
         ),
-        GoRoute(path: "marketplace", builder: (_, _) => MarketplaceView()),
         GoRoute(path: "report", builder: (_, _) => ReportView()),
-        GoRoute(path: "profile", builder: (_, _) => ProfileView()),
       ],
     ),
   ],

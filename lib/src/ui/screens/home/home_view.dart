@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:habit_tracker/src/domain/repostiories/active_user_repository.dart';
-import 'package:habit_tracker/src/ui/core/shared/home_bottom_navbar.dart';
 import 'package:habit_tracker/src/ui/core/shared/home_navbar.dart';
 import 'package:habit_tracker/src/ui/core/theme/color_palette.dart';
 import 'package:habit_tracker/src/ui/core/theme/raw.dart';
@@ -34,7 +33,6 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButton: !isPopupActive
           ? CreateHabitButton()
           : SizedBox.shrink(),
-      bottomNavigationBar: const HomeBottomNavbar(name: ScreenNames.Home),
       body: const _HomeViewBody(),
     );
   }
