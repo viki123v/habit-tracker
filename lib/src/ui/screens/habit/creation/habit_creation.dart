@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:habit_tracker/src/domain/repostiories/habit_repository.dart';
+import 'package:habit_tracker/src/exceptions/habit_dto_conversion.dart';
 import 'package:habit_tracker/src/ui/core/shared/full_width_button.dart';
 import 'package:habit_tracker/src/ui/core/theme.dart';
 import 'package:habit_tracker/src/ui/core/theme/text_levels.dart';
-import 'package:habit_tracker/src/ui/screens/habit/creation/habit_dto.dart';
+import 'package:habit_tracker/src/ui/screens/habit/creation/habit_creation_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/habit/creation/priority_level.dart';
+import 'package:provider/provider.dart';
 
 import 'frequency_selector.dart';
 
 class HabitCreation extends StatefulWidget {
-  final HabitRepository habitRepository;
-
-  const HabitCreation({super.key, required this.habitRepository});
+  const HabitCreation({super.key});
 
   @override
   State<StatefulWidget> createState() => _HabitCreationState();
@@ -22,13 +21,10 @@ class _HabitCreationState extends State<HabitCreation> {
   final _titleController = TextEditingController();
   String _selectedFreq = "Daily";
   static const _frequencyOptions = ["Daily", "Weekly", "Montly"];
-  HabitDto dto = HabitDto();
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-      'Dates: ${dto.dates?.map((date) => date.toIso8601String()).join(', ')}',
-    );
+    final habitCreationViewModel = context.watch<HabitCreationViewmodel>();
 
     return Scaffold(
       appBar: AppBar(
@@ -54,7 +50,7 @@ class _HabitCreationState extends State<HabitCreation> {
                 keyboardType: TextInputType.text,
                 style: TextStylePalette.bodyText,
                 onChanged: (value) {
-                  dto.name = value;
+                  habitCreationViewModel.dto.name = value;
                 },
                 maxLength: 20,
               ),
@@ -91,16 +87,72 @@ class _HabitCreationState extends State<HabitCreation> {
                   ),
                 ),
               ),
-              FrequencySelector(selectedFreq: _selectedFreq, dto: dto),
-              PriorityLevel(dto: dto),
+              FrequencySelector(
+                selectedFreq: _selectedFreq,
+                dto: habitCreationViewModel.dto,
+              ),
+              PriorityLevel(habitCreationViewModel: habitCreationViewModel),
               PrimaryFullWidthButton(
                 "Save Habit",
                 onPressed: () async {
-                  await widget.habitRepository.saveHabitWithDates(
-                    dto.toModel(),
-                  );
-                  if (context.mounted) {
-                    context.pop();
+                  try {
+                    await habitCreationViewModel.saveHabit(context);
+                  } on HabitDtoConversionException catch (e) {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (dialogContext) {
+                          final colorScheme = Theme.of(
+                            dialogContext,
+                          ).colorScheme;
+
+                          return AlertDialog(
+                            icon: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: colorScheme.errorContainer,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.error_outline_rounded,
+                                color: colorScheme.onErrorContainer,
+                                size: 32,
+                              ),
+                            ),
+                            iconPadding: const EdgeInsets.fromLTRB(
+                              24,
+                              24,
+                              24,
+                              12,
+                            ),
+                            title: const Text(
+                              "Cannot create habit",
+                              textAlign: TextAlign.center,
+                            ),
+                            content: Text(e.msg, textAlign: TextAlign.center),
+                            actionsPadding: const EdgeInsets.fromLTRB(
+                              24,
+                              8,
+                              24,
+                              24,
+                            ),
+                            actions: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: FilledButton(
+                                  onPressed: () => dialogContext.pop(),
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: colorScheme.error,
+                                    foregroundColor: colorScheme.onError,
+                                  ),
+                                  child: const Text("Got it"),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   }
                 },
               ),
