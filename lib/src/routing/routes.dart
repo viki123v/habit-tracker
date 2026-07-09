@@ -10,6 +10,7 @@ import 'package:habit_tracker/src/ui/screens/home/home_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/marketplace/marketplace_view.dart';
 import 'package:habit_tracker/src/ui/screens/profile/prifle_view.dart';
 import 'package:habit_tracker/src/ui/screens/report/report_view.dart';
+import 'package:habit_tracker/src/ui/screens/report/report_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -45,7 +46,13 @@ final router = GoRouter(
           builder: (_, _) => Scaffold(),
         ),
         GoRoute(path: "marketplace", builder: (_, _) => MarketplaceView()),
-        GoRoute(path: "report", builder: (_, _) => ReportView()),
+        GoRoute(
+          path: "report",
+          builder: (ctx, _) => ChangeNotifierProvider(
+            create: (ctx) => ReportViewModel(ctx.read<HabitRepository>()),
+            child: const ReportView(),
+          ),
+        ),
         GoRoute(path: "profile", builder: (_, _) => ProfileView()),
       ],
     ),

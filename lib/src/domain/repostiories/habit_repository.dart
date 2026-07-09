@@ -1,5 +1,6 @@
 import 'package:habit_tracker/src/data/models/completed_day.dart';
 import 'package:habit_tracker/src/data/models/completed_habit.dart';
+import 'package:habit_tracker/src/data/models/daily_reflection.dart';
 import 'package:habit_tracker/src/data/models/habit.dart';
 import 'package:habit_tracker/src/data/models/habit_date.dart';
 import 'package:habit_tracker/src/data/models/habit_with_dates.dart';
@@ -96,6 +97,27 @@ class HabitRepository {
       _dateOnly(endDate),
     );
     return completedDays.map((day) => day.date).toList();
+  }
+
+  Future<List<CompletedHabit>> getCompletedHabitsBetween(
+    DateTime startDate,
+    DateTime endDate,
+  ) {
+    return _habitDao.getCompletedHabitsBetween(
+      _dateOnly(startDate),
+      _dateOnly(endDate),
+    );
+  }
+
+  Future<String> getDailyReflection(DateTime date) async {
+    final reflection = await _habitDao.getDailyReflection(_dateOnly(date));
+    return reflection?.note ?? '';
+  }
+
+  Future<void> saveDailyReflection(DateTime date, String note) {
+    return _habitDao.saveDailyReflection(
+      DailyReflection(date: _dateOnly(date), note: note),
+    );
   }
 
   DateTime _dateOnly(DateTime date) {

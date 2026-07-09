@@ -30,4 +30,16 @@ final migration4To5 = Migration(4, 5, (database) async {
   );
 });
 
-final migrations = [migration1To2, migration2To3, migration3To4, migration4To5];
+final migration5To6 = Migration(5, 6, (database) async {
+  await database.execute(
+    'CREATE TABLE IF NOT EXISTS `DailyReflections` (`date` INTEGER NOT NULL, `note` TEXT NOT NULL, PRIMARY KEY (`date`))',
+  );
+});
+
+final migrations = [
+  migration1To2,
+  migration2To3,
+  migration3To4,
+  migration4To5,
+  migration5To6,
+];
