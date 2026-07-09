@@ -45,7 +45,7 @@ final router = GoRouter(
           ],
           builder: (_, _) => Scaffold(),
         ),
-        GoRoute(path: "marketplace", builder: (_, _) => MarketplaceView()),
+        GoRoute(path: "marketplace", builder: (_, _) => const MarketplaceView()),
         GoRoute(
           path: "report",
           builder: (ctx, _) => ChangeNotifierProvider(

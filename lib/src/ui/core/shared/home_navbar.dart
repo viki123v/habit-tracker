@@ -7,9 +7,10 @@ import 'package:habit_tracker/src/ui/core/theme/raw.dart';
 import 'package:habit_tracker/src/ui/core/theme/spacings.dart';
 
 class HomeNavbar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeNavbar({super.key, required this.activeUser});
+  const HomeNavbar({super.key, required this.activeUser, this.title = 'Today'});
 
   final Future<ActiveUser?> activeUser;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class HomeNavbar extends StatelessWidget implements PreferredSizeWidget {
         child: Image.asset(brandLogo),
       ),
       leadingWidth: 64,
-      title: const Text('Today'),
+      title: Text(title),
       actions: [
         Center(
           child: Container(

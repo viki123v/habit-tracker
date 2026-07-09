@@ -1,0 +1,61 @@
+import 'package:habit_tracker/src/ui/screens/marketplace/marketplace_item.dart';
+
+const marketplaceCatalog = [
+  MarketplaceItem(
+    id: 'focus-mastery-set',
+    title: 'Focus Mastery Set',
+    category: MarketplaceCategory.longTerm,
+    rarity: MarketplaceRarity.legendary,
+    price: 1200,
+    imageAsset: 'assets/images/marketplace/focus_mastery_set.jpg',
+    featured: true,
+  ),
+  MarketplaceItem(
+    id: 'cyberpunk-visor',
+    title: 'Cyberpunk Visor',
+    category: MarketplaceCategory.avatar,
+    rarity: MarketplaceRarity.epic,
+    price: 450,
+    imageAsset: 'assets/images/marketplace/cyberpunk_visor.jpg',
+  ),
+  MarketplaceItem(
+    id: 'midnight-forest',
+    title: 'Midnight Forest',
+    category: MarketplaceCategory.themes,
+    rarity: MarketplaceRarity.rare,
+    price: 800,
+    imageAsset: 'assets/images/marketplace/midnight_forest.jpg',
+  ),
+  MarketplaceItem(
+    id: 'focus-mastery',
+    title: 'Focus Mastery',
+    category: MarketplaceCategory.longTerm,
+    rarity: MarketplaceRarity.legendary,
+    price: 1200,
+    imageAsset: 'assets/images/marketplace/focus_mastery.jpg',
+  ),
+  MarketplaceItem(
+    id: 'golden-wings',
+    title: 'Golden Wings',
+    category: MarketplaceCategory.avatar,
+    rarity: MarketplaceRarity.epic,
+    price: 650,
+    imageAsset: 'assets/images/marketplace/golden_wings.jpg',
+  ),
+  MarketplaceItem(
+    id: 'neon-horizon',
+    title: 'Neon Horizon',
+    category: MarketplaceCategory.themes,
+    rarity: MarketplaceRarity.common,
+    price: 300,
+    imageAsset: 'assets/images/marketplace/neon_horizon.jpg',
+  ),
+  MarketplaceItem(
+    id: 'zen-garden',
+    title: 'Zen Garden',
+    category: MarketplaceCategory.themes,
+    rarity: MarketplaceRarity.rare,
+    price: 500,
+    imageAsset: 'assets/images/marketplace/zen_garden.jpg',
+  ),
+];
