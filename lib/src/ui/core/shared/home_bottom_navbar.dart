@@ -23,41 +23,35 @@ class HomeBottomNavbar extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: _items
-            .asMap()
-            .entries
-            .map((entry) {
-              final index = entry.key;
-              final item = entry.value;
-              final isActive = navigationShell.currentIndex == index;
+        children: _items.asMap().entries.map((entry) {
+          final index = entry.key;
+          final item = entry.value;
+          final isActive = navigationShell.currentIndex == index;
 
-              return IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: () => navigationShell.goBranch(
-                  index,
-                  initialLocation: isActive,
+          return IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () =>
+                navigationShell.goBranch(index, initialLocation: isActive),
+            icon: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  item.icon,
+                  size: _bottomBarHeight * 0.52,
+                  color: isActive ? ColorPalette.primary : Colors.black,
+                  fontWeight: FontWeight.w500,
                 ),
-                icon: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      item.icon,
-                      size: _bottomBarHeight * 0.52,
-                      color: isActive ? ColorPalette.primary : Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    Text(
-                      item.label,
-                      style: TextStyle(
-                        color: isActive ? ColorPalette.primary : Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+                Text(
+                  item.label,
+                  style: TextStyle(
+                    color: isActive ? ColorPalette.primary : Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              );
-            })
-            .toList(),
+              ],
+            ),
+          );
+        }).toList(),
       ),
     );
   }
