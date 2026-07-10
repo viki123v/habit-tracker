@@ -12,7 +12,9 @@ import 'package:habit_tracker/src/ui/screens/login/login_view.dart';
 import 'package:habit_tracker/src/ui/screens/login/login_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/marketplace/marketplace_view.dart';
 import 'package:habit_tracker/src/ui/screens/profile/prifle_view.dart';
+import 'package:habit_tracker/src/ui/screens/profile/profile_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/report/report_view.dart';
+import 'package:habit_tracker/src/ui/not_implemented/not_implemented_view.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -51,11 +53,19 @@ final router = GoRouter(
               ),
             ),
           ],
-          builder: (_, _) => Scaffold(),
+          builder: (_, _) => const NotImplementedView(),
         ),
         GoRoute(path: "marketplace", builder: (_, _) => MarketplaceView()),
         GoRoute(path: "report", builder: (_, _) => ReportView()),
-        GoRoute(path: "profile", builder: (_, _) => ProfileView()),
+        GoRoute(
+          path: "profile",
+          builder: (ctx, state) => ChangeNotifierProvider(
+            create: (ctx) =>
+                ProfileViewmodel(ctx.read<ActiveUserRepository>()),
+            child: const ProfileView(),
+          ),
+        ),
+        GoRoute(path: "inventory", builder: (_, _) => NotImplementedView()),
       ],
     ),
   ],
