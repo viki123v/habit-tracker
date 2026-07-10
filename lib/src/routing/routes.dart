@@ -14,6 +14,8 @@ import 'package:habit_tracker/src/ui/screens/marketplace/marketplace_view.dart';
 import 'package:habit_tracker/src/ui/screens/profile/prifle_view.dart';
 import 'package:habit_tracker/src/ui/screens/profile/profile_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/report/report_view.dart';
+import 'package:habit_tracker/src/ui/core/shared/app_shell.dart';
+import 'package:habit_tracker/src/ui/screens/report/report_viewmodel.dart';
 import 'package:habit_tracker/src/ui/not_implemented/not_implemented_view.dart';
 import 'package:provider/provider.dart';
 
@@ -31,16 +33,6 @@ final router = GoRouter(
       ),
     ),
     GoRoute(
-      path: "/home",
-      builder: (ctx, state) => ChangeNotifierProvider(
-        create: (ctx) => HomeViewmodel(
-          ctx.read<HabitRepository>(),
-          ctx.read<ActiveUserRepository>(),
-        ),
-        child: const HomeView(),
-      ),
-    ),
-    GoRoute(
       path: "/habit",
       routes: [
         GoRoute(path: "details", builder: (_, _) => HabitDetails()),
@@ -54,6 +46,16 @@ final router = GoRouter(
         ),
       ],
       builder: (_, _) => const NotImplementedView(),
+    ),
+    GoRoute(
+      path: "/home",
+      builder: (ctx, state) => ChangeNotifierProvider(
+        create: (ctx) => HomeViewmodel(
+          ctx.read<HabitRepository>(),
+          ctx.read<ActiveUserRepository>(),
+        ),
+        child: const HomeView(),
+      ),
     ),
     GoRoute(path: "/marketplace", builder: (_, _) => MarketplaceView()),
     GoRoute(path: "/report", builder: (_, _) => ReportView()),

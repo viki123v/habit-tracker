@@ -6,11 +6,10 @@ import 'package:habit_tracker/src/ui/screens/habit/creation/habit_dto.dart';
 
 class WeeklyWidget extends StatefulWidget {
   static const option = "Weekly";
-  final _selectedDays = <int>[];
   static const _days = ["M", "T", "W", "T", "F", "S", "S"];
   final HabitDto dto;
 
-  WeeklyWidget({super.key, required this.dto});
+  const WeeklyWidget({super.key, required this.dto});
 
   @override
   State<StatefulWidget> createState() => _WeeklyDays();
@@ -18,12 +17,7 @@ class WeeklyWidget extends StatefulWidget {
 
 class _WeeklyDays extends State<WeeklyWidget> {
   final _scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
+  final _selectedDays = <int>[];
 
   List<DateTime> _selectedDaysToCurrentWeekDates(List<int> selectedDays) {
     final today = DateTime.now();
@@ -47,8 +41,14 @@ class _WeeklyDays extends State<WeeklyWidget> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    widget.dto.dates = _selectedDaysToCurrentWeekDates(widget._selectedDays);
+    widget.dto.dates = _selectedDaysToCurrentWeekDates(_selectedDays);
 
     return SizedBox(
       height: 60,
@@ -82,7 +82,7 @@ class _WeeklyDays extends State<WeeklyWidget> {
               itemCount: WeeklyWidget._days.length,
               separatorBuilder: (_, _) => const SizedBox(width: 10),
               itemBuilder: (context, index) {
-                if (widget._selectedDays.contains(index)) {
+                if (_selectedDays.contains(index)) {
                   return FilledButton(
                     style: FilledButton.styleFrom(
                       fixedSize: const Size.square(52),
@@ -91,7 +91,7 @@ class _WeeklyDays extends State<WeeklyWidget> {
                     ),
                     onPressed: () {
                       setState(() {
-                        widget._selectedDays.remove(index);
+                        _selectedDays.remove(index);
                       });
                     },
                     child: Text(WeeklyWidget._days[index]).bodyText(),
@@ -107,7 +107,7 @@ class _WeeklyDays extends State<WeeklyWidget> {
                   ),
                   onPressed: () {
                     setState(() {
-                      widget._selectedDays.add(index);
+                      _selectedDays.add(index);
                     });
                   },
                   child: Text(WeeklyWidget._days[index]).bodyText(),

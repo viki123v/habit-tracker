@@ -9,7 +9,7 @@ class HabitCreationViewmodel extends ChangeNotifier {
 
   HabitCreationViewmodel(this._habitRepository);
 
-  void saveHabit(BuildContext ctx) async {
+  Future<void> saveHabit(BuildContext ctx) async {
     await _habitRepository.saveHabitWithDates(dto.toModel());
     if (ctx.mounted) {
       ctx.pop();
