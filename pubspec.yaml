@@ -64,6 +64,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/marketplace/
 
   # To add more assets to your application, add them to the section above:
   #   - images/a_dot_burr.jpeg

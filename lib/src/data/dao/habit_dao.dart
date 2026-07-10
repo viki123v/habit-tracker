@@ -2,6 +2,7 @@ import 'package:floor/floor.dart';
 
 import '../models/completed_day.dart';
 import '../models/completed_habit.dart';
+import '../models/daily_reflection.dart';
 import '../models/habit.dart';
 import '../models/habit_date.dart';
 
@@ -50,4 +51,18 @@ abstract class HabitDao {
 
   @Query("SELECT * FROM CompletedHabits WHERE date = :date")
   Future<List<CompletedHabit>> getCompletedHabitsForDate(DateTime date);
+
+  @Query(
+    "SELECT * FROM CompletedHabits WHERE date >= :startDate AND date < :endDate",
+  )
+  Future<List<CompletedHabit>> getCompletedHabitsBetween(
+    DateTime startDate,
+    DateTime endDate,
+  );
+
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> saveDailyReflection(DailyReflection reflection);
+
+  @Query("SELECT * FROM DailyReflections WHERE date = :date LIMIT 1")
+  Future<DailyReflection?> getDailyReflection(DateTime date);
 }
