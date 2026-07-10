@@ -17,7 +17,6 @@ class ProfileView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Profile")),
-      bottomNavigationBar: const HomeBottomNavbar(name: ScreenNames.Profile),
       body: viewModel.isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -99,11 +98,7 @@ class _ProfileHeader extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 14,
                   backgroundColor: ColorPalette.primary,
-                  child: const Icon(
-                    Icons.edit,
-                    size: 16,
-                    color: Colors.white,
-                  ),
+                  child: const Icon(Icons.edit, size: 16, color: Colors.white),
                 ),
               ),
             ),
@@ -111,9 +106,10 @@ class _ProfileHeader extends StatelessWidget {
         ),
         SizedBox(height: Spacings.tight),
         Text(
-          [user?.name, user?.surname]
-              .where((part) => part != null && part.isNotEmpty)
-              .join(' '),
+          [
+            user?.name,
+            user?.surname,
+          ].where((part) => part != null && part.isNotEmpty).join(' '),
         ).heading(),
         Text("Level ${viewModel.level}").caption(),
       ],

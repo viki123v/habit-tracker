@@ -52,7 +52,6 @@ class _MarketplaceViewContentState extends State<_MarketplaceViewContent> {
         activeUser: activeUserRepository.getActiveUser(),
         title: 'Marketplace',
       ),
-      bottomNavigationBar: const HomeBottomNavbar(name: ScreenNames.Market),
       body: const _MarketplaceBody(),
     );
   }
