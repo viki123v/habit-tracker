@@ -3,7 +3,6 @@ import 'package:habit_tracker/src/data/dao/active_user_dao.dart';
 import 'package:habit_tracker/src/data/database.dart';
 import 'package:habit_tracker/src/domain/repostiories/active_user_repository.dart';
 import 'package:habit_tracker/src/domain/repostiories/marketplace_repository.dart';
-import 'package:habit_tracker/src/ui/core/shared/home_bottom_navbar.dart';
 import 'package:habit_tracker/src/ui/core/shared/home_navbar.dart';
 import 'package:habit_tracker/src/ui/core/theme.dart';
 import 'package:habit_tracker/src/ui/core/theme/raw.dart';
@@ -40,7 +39,10 @@ class _MarketplaceViewContentState extends State<_MarketplaceViewContent> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => context.read<MarketplaceViewModel>().load());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<MarketplaceViewModel>().load();
+    });
   }
 
   @override

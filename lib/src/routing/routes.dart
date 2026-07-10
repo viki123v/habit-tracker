@@ -31,75 +31,41 @@ final router = GoRouter(
         create: (context) => LoginViewModel(context.read()),
         child: LoginView(),
       ),
-      routes: [
-        StatefulShellRoute.indexedStack(
-          builder: (context, state, navigationShell) =>
-              AppShell(navigationShell: navigationShell),
-          branches: [
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  path: "/home",
-                  builder: (ctx, state) => ChangeNotifierProvider(
-                    create: (ctx) => HomeViewmodel(
-                      ctx.read<HabitRepository>(),
-                      ctx.read<ActiveUserRepository>(),
-                    ),
-                    child: const HomeView(),
-                  ),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  path: "/marketplace",
-                  builder: (_, _) => MarketplaceView(),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: [
-                GoRoute(path: "/profile", builder: (_, _) => ProfileView()),
-              ],
-            ),
-          ],
-        ),
-        GoRoute(
-          path: "habit",
-          routes: [
-            GoRoute(path: "details", builder: (_, _) => HabitDetails()),
-            GoRoute(
-              path: "creation",
-              builder: (ctx, state) => ChangeNotifierProvider(
-                create: (context) =>
-                    HabitCreationViewmodel(context.read<HabitRepository>()),
-                child: const HabitCreation(),
-              ),
-            ),
-          ],
-          builder: (_, _) => const NotImplementedView(),
-        ),
-        GoRoute(
-          path: "marketplace",
-          builder: (_, _) => const MarketplaceView(),
-        ),
-        GoRoute(
-          path: "report",
-          builder: (ctx, _) => ChangeNotifierProvider(
-            create: (ctx) => ReportViewModel(ctx.read<HabitRepository>()),
-            child: const ReportView(),
-          ),
-        ),
-        GoRoute(
-          path: "profile",
-          builder: (ctx, state) => ChangeNotifierProvider(
-            create: (ctx) => ProfileViewmodel(ctx.read<ActiveUserRepository>()),
-            child: const ProfileView(),
-          ),
-        ),
-        GoRoute(path: "inventory", builder: (_, _) => NotImplementedView()),
-      ],
     ),
+    GoRoute(
+      path: "/habit",
+      routes: [
+        GoRoute(path: "details", builder: (_, _) => HabitDetails()),
+        GoRoute(
+          path: "creation",
+          builder: (ctx, state) => ChangeNotifierProvider(
+            create: (context) =>
+                HabitCreationViewmodel(context.read<HabitRepository>()),
+            child: const HabitCreation(),
+          ),
+        ),
+      ],
+      builder: (_, _) => const NotImplementedView(),
+    ),
+    GoRoute(
+      path: "/home",
+      builder: (ctx, state) => ChangeNotifierProvider(
+        create: (ctx) => HomeViewmodel(
+          ctx.read<HabitRepository>(),
+          ctx.read<ActiveUserRepository>(),
+        ),
+        child: const HomeView(),
+      ),
+    ),
+    GoRoute(path: "/marketplace", builder: (_, _) => MarketplaceView()),
+    GoRoute(path: "/report", builder: (_, _) => ReportView()),
+    GoRoute(
+      path: "/profile",
+      builder: (ctx, state) => ChangeNotifierProvider(
+        create: (ctx) => ProfileViewmodel(ctx.read<ActiveUserRepository>()),
+        child: const ProfileView(),
+      ),
+    ),
+    GoRoute(path: "/inventory", builder: (_, _) => NotImplementedView()),
   ],
 );

@@ -47,4 +47,6 @@ class LoginViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<bool> isLoggedIn() async =>  await _activeUserRepository.getActiveUser().then((activeUser) => activeUser != null);
 }
