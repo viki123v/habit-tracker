@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/src/data/dao/active_user_dao.dart';
 import 'package:habit_tracker/src/data/dao/habit_dao.dart';
+import 'package:habit_tracker/src/data/dao/marketplace_dao.dart';
 import 'package:habit_tracker/src/data/database.dart';
 import 'package:habit_tracker/src/data/migrations.dart';
 import 'package:habit_tracker/src/domain/repostiories/active_user_repository.dart';
 import 'package:habit_tracker/src/domain/repostiories/habit_repository.dart';
+import 'package:habit_tracker/src/domain/repostiories/marketplace_repository.dart';
 import 'package:habit_tracker/src/routing/routes.dart';
 import 'package:habit_tracker/src/ui/core/theme/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +31,13 @@ void main() async {
         Provider<HabitDao>.value(value: database.habitDao),
         Provider<HabitRepository>(
           create: (context) => HabitRepository(context.read<HabitDao>()),
+        ),
+        Provider<MarketplaceDao>.value(value: database.marketplaceDao),
+        Provider<MarketplaceRepository>(
+          create: (context) => MarketplaceRepository(
+            context.read<MarketplaceDao>(),
+            context.read<ActiveUserDao>(),
+          ),
         ),
       ],
       child: MaterialApp.router(

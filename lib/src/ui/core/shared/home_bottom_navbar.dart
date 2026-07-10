@@ -12,9 +12,9 @@ class HomeBottomNavbar extends StatelessWidget {
   final ScreenNames activeScreenName;
 
   static const _items = [
-    (label: 'Home', icon: Icons.home_outlined, route: "home"),
-    (label: 'Market', icon: Icons.storefront_outlined, route: "marketplace"),
-    (label: 'Profile', icon: Icons.person_outline, route: "profile"),
+    (label: 'Home', icon: Icons.home_outlined, route: "/"),
+    (label: 'Market', icon: Icons.storefront_outlined, route: "/marketplace"),
+    (label: 'Profile', icon: Icons.person_outline, route: "/profile"),
   ];
 
   @override
@@ -30,9 +30,7 @@ class HomeBottomNavbar extends StatelessWidget {
             .map(
               (item) => IconButton(
                 padding: EdgeInsets.zero,
-                onPressed: () => {
-                  context.push(item.route)
-                },
+                onPressed: () => context.go(item.route),
                 icon: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
