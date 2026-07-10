@@ -21,7 +21,9 @@ class CreateHabitButton extends StatelessWidget {
           onPressed: () async {
             await context.push("/habit/creation");
             if (context.mounted) {
-              await context.read<HomeViewmodel>().refreshHabitsForToday();
+              final homeViewmodel = context.read<HomeViewmodel>();
+              await homeViewmodel.refreshHabitsForToday();
+              await homeViewmodel.refreshHasHabits();
             }
           },
           child: const Icon(Icons.add, size: 50),
