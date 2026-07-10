@@ -101,7 +101,9 @@ class _MarketplaceBody extends StatelessWidget {
                     itemBuilder: (context, index) => _FeaturedItemCard(
                       item: viewModel.featuredItems[index],
                       owned: viewModel.isOwned(viewModel.featuredItems[index]),
-                      buying: viewModel.isBuying(viewModel.featuredItems[index]),
+                      buying: viewModel.isBuying(
+                        viewModel.featuredItems[index],
+                      ),
                       onBuy: () => _confirmPurchase(
                         context,
                         viewModel.featuredItems[index],
@@ -172,23 +174,23 @@ class _CategoryFilters extends StatelessWidget {
   Widget build(BuildContext context) {
     final filters =
         <({String label, IconData icon, MarketplaceCategory? value})>[
-      (label: 'All', icon: Icons.auto_awesome_outlined, value: null),
-      (
-        label: 'Avatar',
-        icon: Icons.person_outline,
-        value: MarketplaceCategory.avatar,
-      ),
-      (
-        label: 'Themes',
-        icon: Icons.palette_outlined,
-        value: MarketplaceCategory.themes,
-      ),
-      (
-        label: 'Long-term',
-        icon: Icons.emoji_events_outlined,
-        value: MarketplaceCategory.longTerm,
-      ),
-    ];
+          (label: 'All', icon: Icons.auto_awesome_outlined, value: null),
+          (
+            label: 'Avatar',
+            icon: Icons.person_outline,
+            value: MarketplaceCategory.avatar,
+          ),
+          (
+            label: 'Themes',
+            icon: Icons.palette_outlined,
+            value: MarketplaceCategory.themes,
+          ),
+          (
+            label: 'Long-term',
+            icon: Icons.emoji_events_outlined,
+            value: MarketplaceCategory.longTerm,
+          ),
+        ];
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -367,11 +369,7 @@ class _MarketplaceItemCard extends StatelessWidget {
                     children: [
                       Expanded(child: _PricePill(price: item.price)),
                       SizedBox(width: Spacings.tight),
-                      _BuyButton(
-                        owned: owned,
-                        buying: buying,
-                        onBuy: onBuy,
-                      ),
+                      _BuyButton(owned: owned, buying: buying, onBuy: onBuy),
                     ],
                   ),
                 ],
@@ -400,10 +398,7 @@ class _RarityBadge extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderSizings.xl,
-      ),
+      decoration: BoxDecoration(color: color, borderRadius: BorderSizings.xl),
       child: Text(
         rarity.label,
         style: const TextStyle(
@@ -507,7 +502,10 @@ class _BuyButton extends StatelessWidget {
   }
 }
 
-Future<void> _confirmPurchase(BuildContext context, MarketplaceItem item) async {
+Future<void> _confirmPurchase(
+  BuildContext context,
+  MarketplaceItem item,
+) async {
   final viewModel = context.read<MarketplaceViewModel>();
   final confirmed = await showDialog<bool>(
     context: context,

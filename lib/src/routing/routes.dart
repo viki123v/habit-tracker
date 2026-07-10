@@ -4,13 +4,18 @@ import 'package:habit_tracker/src/domain/repostiories/active_user_repository.dar
 import 'package:habit_tracker/src/domain/repostiories/habit_repository.dart';
 import 'package:habit_tracker/src/ui/page_not_found/page_not_found_view.dart';
 import 'package:habit_tracker/src/ui/screens/habit/creation/habit_creation.dart';
+import 'package:habit_tracker/src/ui/screens/habit/creation/habit_creation_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/habit/details/habit_details.dart';
 import 'package:habit_tracker/src/ui/screens/home/home_view.dart';
 import 'package:habit_tracker/src/ui/screens/home/home_viewmodel.dart';
+import 'package:habit_tracker/src/ui/screens/login/login_view.dart';
+import 'package:habit_tracker/src/ui/screens/login/login_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/marketplace/marketplace_view.dart';
 import 'package:habit_tracker/src/ui/screens/profile/prifle_view.dart';
+import 'package:habit_tracker/src/ui/screens/profile/profile_viewmodel.dart';
 import 'package:habit_tracker/src/ui/screens/report/report_view.dart';
 import 'package:habit_tracker/src/ui/screens/report/report_viewmodel.dart';
+import 'package:habit_tracker/src/ui/not_implemented/not_implemented_view.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -21,31 +26,40 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: "/",
-      // builder: (context, state) => ChangeNotifierProvider(
-      // create: (context) => LoginViewModel(context.read()),
-      // child: const LoginView(),
-      // ),
-      builder: (ctx, state) => ChangeNotifierProvider(
-        create: (ctx) => HomeViewmodel(
-          ctx.read<HabitRepository>(),
-          ctx.read<ActiveUserRepository>(),
-        ),
-        child: const HomeView(),
+      builder: (context, state) => ChangeNotifierProvider(
+        create: (context) => LoginViewModel(context.read()),
+        child: LoginView(),
       ),
       routes: [
+        GoRoute(
+          path: "home",
+          builder: (ctx, state) => ChangeNotifierProvider(
+            create: (ctx) => HomeViewmodel(
+              ctx.read<HabitRepository>(),
+              ctx.read<ActiveUserRepository>(),
+            ),
+            child: const HomeView(),
+          ),
+        ),
         GoRoute(
           path: "habit",
           routes: [
             GoRoute(path: "details", builder: (_, _) => HabitDetails()),
             GoRoute(
               path: "creation",
-              builder: (ctx, state) =>
-                  HabitCreation(habitRepository: ctx.watch()),
+              builder: (ctx, state) => ChangeNotifierProvider(
+                create: (context) =>
+                    HabitCreationViewmodel(context.read<HabitRepository>()),
+                child: const HabitCreation(),
+              ),
             ),
           ],
-          builder: (_, _) => Scaffold(),
+          builder: (_, _) => const NotImplementedView(),
         ),
-        GoRoute(path: "marketplace", builder: (_, _) => const MarketplaceView()),
+        GoRoute(
+          path: "marketplace",
+          builder: (_, _) => const MarketplaceView(),
+        ),
         GoRoute(
           path: "report",
           builder: (ctx, _) => ChangeNotifierProvider(
@@ -53,7 +67,14 @@ final router = GoRouter(
             child: const ReportView(),
           ),
         ),
-        GoRoute(path: "profile", builder: (_, _) => ProfileView()),
+        GoRoute(
+          path: "profile",
+          builder: (ctx, state) => ChangeNotifierProvider(
+            create: (ctx) => ProfileViewmodel(ctx.read<ActiveUserRepository>()),
+            child: const ProfileView(),
+          ),
+        ),
+        GoRoute(path: "inventory", builder: (_, _) => NotImplementedView()),
       ],
     ),
   ],

@@ -5,6 +5,7 @@ import 'package:habit_tracker/src/ui/core/theme/border_sizings.dart';
 import 'package:habit_tracker/src/ui/core/theme/color_palette.dart';
 import 'package:habit_tracker/src/ui/core/theme/raw.dart';
 import 'package:habit_tracker/src/ui/core/theme/spacings.dart';
+import 'package:habit_tracker/src/ui/core/shared/user_avatar.dart';
 
 class HomeNavbar extends StatelessWidget implements PreferredSizeWidget {
   const HomeNavbar({super.key, required this.activeUser, this.title = 'Today'});
@@ -39,10 +40,6 @@ class HomeNavbar extends StatelessWidget implements PreferredSizeWidget {
               future: activeUser,
               builder: (context, snapshot) {
                 final user = snapshot.data;
-                final imageFileName = user?.imageName;
-                final imageName = imageFileName == null || imageFileName.isEmpty
-                    ? 'assets/images/anonymousUser.png'
-                    : 'assets/images/$imageFileName';
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 2),
@@ -71,16 +68,7 @@ class HomeNavbar extends StatelessWidget implements PreferredSizeWidget {
                         ],
                       ),
                       SizedBox(width: Spacings.loose),
-                      ClipOval(
-                        child: Image.asset(
-                          imageName,
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.account_circle, size: 30),
-                        ),
-                      ),
+                      UserAvatar(imagePath: user?.imageName, size: 30),
                     ],
                   ),
                 );
